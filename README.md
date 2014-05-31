@@ -22,7 +22,7 @@ $Id: README,v 1.1.1.1 2005/12/03 14:18:50 taku-ku Exp $;
 
   % python setup.py build
   % su
-  # python setup.py install
+  % python setup.py install
   
   You can change the install directory with the --prefix option. For example:
 
