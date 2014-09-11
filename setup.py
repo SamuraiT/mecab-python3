@@ -18,7 +18,7 @@ def cmd1(strings):
 def cmd2(strings):
     return cmd1(strings).split()
 
-setup(name = "mecab-python",
+setup(name = "mecab-python3",
     packages = ['mecabpython3'],
     version = cmd1("mecab-config --version"),
     description = 'python wrapper for mecab: Morphological Analysis engine',
