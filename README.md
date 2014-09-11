@@ -1,7 +1,6 @@
 mecab-python3
 -------------
-This is the python3 versioin of mecab.
-
+This python wrapper for mecab works on both **python3.x** and **python2.x**.
 
 Installtion and Usage
 --------------
