@@ -8,7 +8,7 @@ Installtion and Usage
 1. Installation
 
 ```
-pip install mecabpython3
+pip install mecab-python3
 ```
 
 Before installing mecabpython3, make sure you have installed *`mecab`*
@@ -20,7 +20,7 @@ Assume you are using Debian-based linux.
 ```
 sudo apt-get install libmecab-dev
 sudo apt-get install mecab mecab-ipadic-utf8
-pip install mecabpython3
+pip install mecab-python3
 ```
 
 2. How to use?
