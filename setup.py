@@ -12,11 +12,11 @@ def read_file(filename):
     else:
         return ''
 
-def cmd1(string):
-    return os.popen(string).readlines()[0][:-1]
+def cmd1(strings):
+    return os.popen(strings).readlines()[0][:-1]
 
-def cmd2(string):
-    return cmd1(string).split()
+def cmd2(strings):
+    return cmd1(strings).split()
 
 setup(name = "mecab-python",
     packages = ['mecab-python3'],
