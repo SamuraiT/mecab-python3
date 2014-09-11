@@ -18,8 +18,8 @@ def cmd1(strings):
 def cmd2(strings):
     return cmd1(strings).split()
 
-setup(name = "mecab-python3",
-    packages = ['mecab-python3'],
+setup(name = "mecab-python",
+    packages = ['mecabpython3'],
     version = cmd1("mecab-config --version"),
     description = 'python wrapper for mecab: Morphological Analysis engine',
     long_description = read_file('README.md'),
