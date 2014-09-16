@@ -3,6 +3,7 @@
 from distutils.core import setup,Extension,os
 import string
 import os
+import sys
 
 def read_file(filename):
     filepath = os.path.join(
@@ -12,11 +13,18 @@ def read_file(filename):
     else:
         return ''
 
-def cmd1(strings):
-    return os.popen(strings).readlines()[0][:-1]
+if sys.version > '3':
+    def cmd1(strings):
+        return os.popen(strings).readlines()[0][:-1]
 
-def cmd2(strings):
-    return cmd1(strings).split()
+    def cmd2(strings):
+        return cmd1(strings).split()
+else:
+    def cmd1(strings):
+        return os.popen(strings).readlines()[0][:-1]
+
+    def cmd2(strings):
+        return string.split(cmd1(strings))
 
 setup(name = "mecab-python3",
     version = '0.6',
