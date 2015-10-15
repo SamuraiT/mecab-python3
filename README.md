@@ -1,25 +1,35 @@
 mecab-python3
 -------------
+
 This python wrapper for mecab works on both **python3.x** and **python2.x**.
 
-Installtion and Usage
+The difference between this repository and
+[SamuraiT/mecab-python3](https://github.com/SamuraiT/mecab-python3/) is
+that it actually contains the SWIG interface definition from MeCab
+upstream ([taku910/mecab](https://github.com/taku910/mecab/)) and
+regenerates the bindings at build time.  Therefore it is much less
+likely to break when something changes in Python or SWIG, but
+conversely, you need SWIG to build it.
+
+There is one deviation from MeCab upstream's bindings file:
+`MeCab::VERSION` is not available, as it was defined in a kludgey way
+that permitted it to get of sync with the library.  Use
+`MeCab.Tagger("...").version()` instead.
+
+Installation and Usage
 --------------
-1. Installation
 
 ```
-pip install mecab-python3
+git clone git@github.com:zackw/mecab-python3
+cd mecab-python3
+python setup.py install
 ```
 
-Before installing mecabpython3, make sure you have installed *`mecab`*
-already.
-
-example of installtion.
-Assume you are using Debian-based linux.
+You must have `mecab` and `swig` installed before running `setup.py`.
+For instance, on Debian-based Linux,
 
 ```
-sudo apt-get install libmecab-dev
-sudo apt-get install mecab mecab-ipadic-utf8
-pip install mecab-python3
+sudo apt-get install mecab mecab-ipadic-utf8 libmecab-dev swig
 ```
 
 2. How to use?
