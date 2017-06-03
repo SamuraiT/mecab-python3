@@ -3,13 +3,6 @@ mecab-python3
 
 This python wrapper for mecab works on both **python3.x** and **python2.x**.
 
-Note
-----
-
-There is one deviation from MeCab upstream's bindings file:
-`MeCab::VERSION` is not available, as it was defined in a kludgey way
-that permitted it to get of sync with the library.  Use
-`MeCab.Tagger("...").version()` instead.
 
 Installation and Usage
 --------------

@@ -152,3 +152,7 @@ char* mecab_node_t_surface_get(mecab_node_t *n) {
 }
 %}
 %include "mecab.h"
+
+%pythoncode %{
+VERSION = Tagger_version()
+%}
