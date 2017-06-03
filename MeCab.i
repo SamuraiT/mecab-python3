@@ -13,8 +13,6 @@
 #endif
 %}
 
-%newobject surface;
-
 %exception {
   try { $action }
   catch (char *e) { SWIG_exception (SWIG_RuntimeError, e); }
@@ -144,12 +142,6 @@ void delete_MeCab_Lattice (MeCab::Lattice *t) {
   t = 0;
 }
 
-char* mecab_node_t_surface_get(mecab_node_t *n) {
-  char *s = new char [n->length + 1];
-  memcpy (s, n->surface, n->length);
-  s[n->length] = '\0';
-  return s;
-}
 %}
 %include "mecab.h"
 
