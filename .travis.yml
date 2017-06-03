@@ -1,0 +1,25 @@
+dist: trusty
+language: python
+
+addons:
+  apt:
+    packages:
+     - libmecab-dev
+     - mecab
+     - mecab-ipadic-utf8
+     - swig
+
+python:
+ - "2.7"
+ - "3.5"
+ - "3.6"
+
+install:
+ - pip install coverage coveralls
+ - python setup.py install
+
+script:
+ - coverage run test.py
+
+after_success:
+ - coveralls
