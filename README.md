@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/klauer/mecab-python3.svg?branch=master)](https://travis-ci.org/klauer/mecab-python3)
+
 mecab-python3
 -------------
 

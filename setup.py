@@ -22,7 +22,7 @@ swig_opts = ['-shadow', '-c++']
 swig_opts.extend("-I"+d for d in inc_dir)
 
 setup(name = "mecab-python3",
-    version = '0.6',
+    version = '0.7',
     description = 'python wrapper for mecab: Morphological Analysis engine',
     long_description = read_file('README.md'),
     maintainer = 'Tatsuro Yasukawa',
