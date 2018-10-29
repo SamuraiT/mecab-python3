@@ -19,6 +19,7 @@ You must have ``mecab`` and ``swig`` installed before running ``setup.py``.
 For instance, on Debian-based Linux,
 
 .. code-block:: bash
+
    sudo apt-get install mecab mecab-ipadic-utf8 libmecab-dev swig
 
 2. How to use?
@@ -28,6 +29,7 @@ For instance, on Debian-based Linux,
 3. Simple example
 
 .. code-block:: python
+
    import MeCab
    mecab = MeCab.Tagger ("-Ochasen")
    print(mecab.parse("pythonが大好きです"))
