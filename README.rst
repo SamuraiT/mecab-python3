@@ -9,7 +9,7 @@ This python wrapper for mecab works on both **python3.x** and **python2.x**.
 
 
 Installation and Usage
---------------
+----------------------
 
 .. code-block:: bash
 
