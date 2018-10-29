@@ -1,9 +1,7 @@
 #!/usr/bin/env python
 
-from distutils.core import setup,Extension,os
-import string
+from distutils.core import setup, Extension
 import os
-import sys
 
 def read_file(filename):
     filepath = os.path.join(
@@ -13,18 +11,15 @@ def read_file(filename):
     else:
         return ''
 
-if sys.version > '3':
-    def cmd1(strings):
-        return os.popen(strings).readlines()[0][:-1]
+def mecab_config(arg):
+    return os.popen("mecab-config " + arg).readlines()[0].split()
 
-    def cmd2(strings):
-        return cmd1(strings).split()
-else:
-    def cmd1(strings):
-        return os.popen(strings).readlines()[0][:-1]
+inc_dir  = mecab_config("--inc-dir")
+lib_dirs = mecab_config("--libs-only-L")
+libs     = mecab_config("--libs-only-l")
 
-    def cmd2(strings):
-        return string.split(cmd1(strings))
+swig_opts = ['-shadow', '-c++']
+swig_opts.extend("-I"+d for d in inc_dir)
 
 setup(name = "mecab-python3",
     version = '0.6',
@@ -37,10 +32,11 @@ setup(name = "mecab-python3",
     py_modules = ["MeCab"],
     ext_modules = [
         Extension("_MeCab",
-        ["MeCab_wrap.cxx",],
-        include_dirs=cmd2("mecab-config --inc-dir"),
-        library_dirs=cmd2("mecab-config --libs-only-L"),
-        libraries=cmd2("mecab-config --libs-only-l"))
+                  ["MeCab.i"],
+                  include_dirs = inc_dir,
+                  library_dirs = lib_dirs,
+                  libraries    = libs,
+                  swig_opts    = swig_opts)
     ],
     classifiers = [
         "Programming Language :: Python",

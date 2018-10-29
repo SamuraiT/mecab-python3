@@ -1,0 +1,6 @@
+#!/usr/bin/make -f
+
+export PYBUILD_NAME = mecab
+
+%:
+	dh $@ --with python2,python3 --buildsystem=pybuild

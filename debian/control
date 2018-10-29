@@ -1,0 +1,43 @@
+Source: python-mecab
+Section: python
+Priority: optional
+Maintainer: Debian Python Modules Team <python-modules-team@lists.alioth.debian.org>
+Uploaders: TANIGUCHI Takaki <takaki@debian.org>
+Build-Depends: debhelper (>= 9~), dh-python,
+  python-all-dev, python3-all-dev,
+  python-setuptools, python3-setuptools,
+  libmecab-dev (>= 0.99.3), swig
+Standards-Version: 3.9.6
+X-Python-Version: >= 2.6
+X-Python3-Version: >= 3.2
+Homepage: http://sourceforge.net/projects/mecab/
+Vcs-Svn: svn://anonscm.debian.org/python-modules/packages/python-mecab/trunk/
+Vcs-Browser: http://anonscm.debian.org/viewvc/python-modules/packages/python-mecab/trunk/
+
+Package: python-mecab
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${python:Depends},
+ mecab-jumandic | mecab-ipadic
+Provides: ${python:Provides}
+Description: mecab bindings for Python 2
+ Mecab is a morphological analysis system.  It reads Japanese
+ sentences from the standard input, segments them into morpheme
+ sequences, and outputs them to the standard output with many
+ additional pieces of information (pronunciation, semantic
+ information, etc).
+ .
+ This package provides the bindings for Python 2.
+
+Package: python3-mecab
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${python3:Depends},
+ mecab-jumandic | mecab-ipadic
+Provides: ${python3:Provides}
+Description: mecab bindings for Python 3
+ Mecab is a morphological analysis system.  It reads Japanese
+ sentences from the standard input, segments them into morpheme
+ sequences, and outputs them to the standard output with many
+ additional pieces of information (pronunciation, semantic
+ information, etc).
+ .
+ This package provides the bindings for Python 3.

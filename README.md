@@ -1,25 +1,21 @@
 mecab-python3
 -------------
+
 This python wrapper for mecab works on both **python3.x** and **python2.x**.
 
-Installtion and Usage
+
+Installation and Usage
 --------------
-1. Installation
 
 ```
 pip install mecab-python3
 ```
 
-Before installing mecabpython3, make sure you have installed *`mecab`*
-already.
-
-example of installtion.
-Assume you are using Debian-based linux.
+You must have `mecab` and `swig` installed before running `setup.py`.
+For instance, on Debian-based Linux,
 
 ```
-sudo apt-get install libmecab-dev
-sudo apt-get install mecab mecab-ipadic-utf8
-pip install mecab-python3
+sudo apt-get install mecab mecab-ipadic-utf8 libmecab-dev swig
 ```
 
 2. How to use?

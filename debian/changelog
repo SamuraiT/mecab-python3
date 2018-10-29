@@ -1,0 +1,53 @@
+python-mecab (1:0.8.0-0local1) unstable; urgency=low
+
+  * Build from upstream SWIG sources rather than shipping generated
+    code.
+  * Add python3 binary packages.
+  * Bump debhelper compat level to 9.
+  * Bump Standards-Version to 3.9.6.
+
+ -- Zack Weinberg <zackw@panix.com>  Thu, 15 Oct 2015 16:57:30 -0400
+
+python-mecab (0.99.6-1) unstable; urgency=low
+
+  [ Jakub Wilk ]
+  * Use canonical URIs for Vcs-* fields.
+
+  [ TANIGUCHI Takaki ]
+  * New upstream release
+
+ -- TANIGUCHI Takaki <takaki@debian.org>  Mon, 19 Aug 2013 15:37:38 +0900
+
+python-mecab (0.99.3-1) unstable; urgency=low
+
+  [ Jakub Wilk ]
+  * Add Vcs-* fields.
+
+  [ TANIGUCHI Takaki ]
+  * New upstream release
+  * debian/copyright: Update format URI to 1.0.
+  * debian/watch: No longer uses googlecode.debian.net.
+  * Bump Standards-Version to 3.9.3.
+
+ -- TANIGUCHI Takaki <takaki@debian.org>  Sat, 31 Mar 2012 18:13:24 +0900
+
+python-mecab (0.98-3) unstable; urgency=low
+
+  * Switch to dh_python2.
+  * Bump Standards-Version to 3.9.2.
+  * debian/copyright: Rewirte in DEP-5 format.
+  * debian/source/format: 3.0 (quilt).
+
+ -- TANIGUCHI Takaki <takaki@debian.org>  Mon, 23 May 2011 11:11:18 +0900
+
+python-mecab (0.98-2) unstable; urgency=low
+
+  * debian/control: remove wrong Vcs-* fields
+
+ -- TANIGUCHI Takaki <takaki@debian.org>  Sun, 25 Oct 2009 16:42:28 +0900
+
+python-mecab (0.98-1) unstable; urgency=low
+
+  * Initial release (Closes: #551309)
+
+ -- TANIGUCHI Takaki <takaki@debian.org>  Sun, 18 Oct 2009 16:47:26 +0900
