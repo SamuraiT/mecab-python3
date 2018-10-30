@@ -3,8 +3,13 @@
 from distutils.core import setup, Extension
 import os
 
-with open('README.rst') as readme_file:
-    readme = readme_file.read()
+def read_file(filename):
+    filepath = os.path.join(
+    os.path.dirname(os.path.dirname(__file__)), filename)
+    if os.path.exists(filepath):
+        return open(filepath).read()
+    else:
+        return ''
 
 def mecab_config(arg):
     return os.popen("mecab-config " + arg).readlines()[0].split()
@@ -19,7 +24,7 @@ swig_opts.extend("-I"+d for d in inc_dir)
 setup(name = "mecab-python3",
     version = '0.8.2',
     description = 'python wrapper for mecab: Morphological Analysis engine',
-    long_description=readme,
+    long_description= read_file('README.rst'),
     maintainer = 'Tatsuro Yasukawa',
     maintainer_email = 't.yasukawa01@gmail.com',
     url = 'https://github.com/SamuraiT/mecab-python3',
