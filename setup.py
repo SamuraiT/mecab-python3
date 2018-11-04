@@ -1,11 +1,25 @@
 #!/usr/bin/env python
 
-from distutils.core import setup, Extension
 import os
+
+try:
+    import setuptools
+except ImportError:
+    pass
+
+from distutils.core import setup, Extension
+from distutils.command.build_py import build_py as _build_py
+
+# Distutils runs build_py and then build_ext, but MeCab.py won't exist
+# until build_ext runs, so subclass build_py to invoke build_ext itself.
+class build_py(_build_py):
+    def run(self):
+        self.run_command("build_ext")
+        return _build_py.run(self)
 
 def read_file(filename):
     filepath = os.path.join(
-    os.path.dirname(os.path.dirname(__file__)), filename)
+        os.path.dirname(os.path.dirname(__file__)), filename)
     if os.path.exists(filepath):
         return open(filepath).read()
     else:
@@ -24,11 +38,12 @@ swig_opts.extend("-I"+d for d in inc_dir)
 setup(name = "mecab-python3",
     version = '0.8.3',
     description = 'python wrapper for mecab: Morphological Analysis engine',
-    long_description= read_file('README.rst'),
+    long_description = read_file('README.rst'),
     maintainer = 'Tatsuro Yasukawa',
     maintainer_email = 't.yasukawa01@gmail.com',
     url = 'https://github.com/SamuraiT/mecab-python3',
     license = 'BSD',
+    cmdclass = {"build_py": build_py},
     py_modules = ["MeCab"],
     ext_modules = [
         Extension("_MeCab",
