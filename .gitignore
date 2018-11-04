@@ -7,9 +7,14 @@
 *~
 \#*#
 .#*
+MANIFEST
 MeCab.py
 MeCab_wrap.c*
+__pycache__/
+*.egg-info/
 .pybuild/
+build/
+dist/
 debian/files
 debian/python-mecab.*
 debian/python-mecab/

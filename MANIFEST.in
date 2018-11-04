@@ -1,0 +1,4 @@
+include *.rst *.html
+include AUTHORS BSD GPL LGPL COPYING
+include test.py
+include MANIFEST.in
