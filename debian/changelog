@@ -1,10 +1,9 @@
-python-mecab (1:0.8.3-1) unstable; urgency=medium
+python-mecab (0.996.1-1) unstable; urgency=medium
 
   [ Zack Weinberg ]
-  * Switch upstream to “mecab-python3” PyPI package, which runs SWIG
-    at build time rather than embedding SWIG-generated code, and (therefore)
-    supports Python 3.  This package is versioned independently from
-    MeCab itself, which requires an epoch.
+  * Switch upstream to “mecab-python3” PyPI package, which runs
+    SWIG at build time rather than embedding SWIG-generated code,
+    and therefore supports Python 3.
   * Build using pybuild.
   * Add python3 binary packages.
   * Remove obsolete Provides: lines.
