@@ -41,7 +41,7 @@ swig_opts.extend("-I"+d for d in inc_dir)
 setup(name = "mecab-python3",
     version = '0.8.3',
     description = 'python wrapper for mecab: Morphological Analysis engine',
-    long_description = read_file('README.rst'),
+    long_description = read_file('README.md'),
     maintainer = 'Tatsuro Yasukawa',
     maintainer_email = 't.yasukawa01@gmail.com',
     url = 'https://github.com/SamuraiT/mecab-python3',
