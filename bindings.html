@@ -13,14 +13,14 @@
 <h2>概要</h2>
 <p>
 各種スクリプト言語
-(<a href="http://www.perl.com">perl</a>, 
-<a href="http://www.ruby-lang.org">ruby</a>, 
-<a href="http://www.python.org">python</a>, 
+(<a href="http://www.perl.com">perl</a>,
+<a href="http://www.ruby-lang.org">ruby</a>,
+<a href="http://www.python.org">python</a>,
 <a href="http://java.sun.com">Java</a>)
 から, MeCab が提供する形態素解析の機能を利用可能です.
 各バインディングは <a href="http://www.swig.org">SWIG</a> というプログラ
 ムを用いて, 自動生成されています. <a href="http://www.swig.org">SWIG</a> がサポートする他の言語も
-生成可能だと思われますが, 現在は, 作者の管理できる範囲内ということで, 
+生成可能だと思われますが, 現在は, 作者の管理できる範囲内ということで,
 上記の4つの言語のみを提供しております.
 </p>
 
@@ -66,7 +66,7 @@ import org.chasen.mecab.Tagger;
 import org.chasen.mecab.Node
  public static void main(String[] argv) {
  Tagger tagger = new Tagger ("-Ochasen");
- System.out.println (tagger.parse ("太郎は二郎にこの本を渡した.")); 
+ System.out.println (tagger.parse ("太郎は二郎にこの本を渡した."));
 }
 </pre>
 
@@ -89,7 +89,7 @@ MeCab::Node は, 双方向リストとして表現されており, next, prev �
 います.</p>
 
 <p>
-以下に <a href="http://www.perl.com">perl</a> の例を示します. この例では, 
+以下に <a href="http://www.perl.com">perl</a> の例を示します. この例では,
 各形態素を順次にアクセスし,形態素の表層文字列, 品詞, その形態素までのコストを表示します.
 </p>
 
@@ -100,16 +100,16 @@ my $m = new MeCab::Tagger ("");
 for (my $n = $m->parseToNode ("今日もしないとね"); $n ; $n = $n-&gt;{next}) {
    printf ("%s\t%s\t%d\n",
             $n-&gt;{surface},          # 表層
-	    $n-&gt;{feature},          # 現在の品詞
-	    $n-&gt;{cost}              # その形態素までのコスト
-	    );
+            $n-&gt;{feature},          # 現在の品詞
+            $n-&gt;{cost}              # その形態素までのコスト
+            );
 }
 </pre>
 
 <h2>エラー処理</h2>
 <p>
-もし, コンストラクタや, 解析途中でエラーが起きた場合は, 
-RuntimeError 例外が発生します. 
+もし, コンストラクタや, 解析途中でエラーが起きた場合は,
+RuntimeError 例外が発生します.
 例外のハンドリングの方法は, 各言語のリファレンスマニュアルを
 ごらんください. 以下は, <a href="http://www.python.org">python</a> の例です
 </p>
@@ -131,7 +131,7 @@ except RuntimeError, e:
     注意してください. もし, これらを無視したい場合は, 以下のように
     next でそれぞれを読み飛ばしてください.
 <pre>
-my $n = $m-&gt;parseToNode ("今日もしないとね"); 
+my $n = $m-&gt;parseToNode ("今日もしないとね");
 $n = $n-&gt;{next}; # 「文頭」を無視
 
 while ($n-&gt;{next}) { # next を調べる
@@ -139,20 +139,20 @@ while ($n-&gt;{next}) { # next を調べる
   $n = $n-&gt;{next}; # 次に移動
 }
 </pre>
-   
+
 </p>
 
 <h3>MeCab::Node の振舞い</h3>
 <p>
-MeCab::Node の実体(メモリ上にある形態素情報)は, 
+MeCab::Node の実体(メモリ上にある形態素情報)は,
 MeCab::Tagger インスタンスが管理しています. MeCab::Node は,
 Node の実体を指している<b>参照</b>にすぎせん. そのために, parseToNode が
 呼ばれる度に, 実体そのものが, 上書きされていきます. 以下のような例はソースの意図する通りには動きません.
 </p>
- 
+
 <pre>
 m = MeCab.Tagger ("")
-n1 = m.parseToNode ("今日もしないとね") 
+n1 = m.parseToNode ("今日もしないとね")
 n2 = m.parseToNode ("さくさくさくら")
 
 # n1 の内容は無効になっている
@@ -163,7 +163,7 @@ while (n1.hasNode () != 0):
 
 <p>
 上記の例では, n1 の指す中身が, 「さくさくさくら」を解析した時点で
-上書きされており, 使用できなくなっています. 
+上書きされており, 使用できなくなっています.
 </p>
 
 <p>
@@ -185,48 +185,48 @@ namespace MeCab {
 
      // str を解析して文字列として結果を得ます. len は str の長さ(省略可能)
      string parse(string str, int len);
-  
+
      // parse と同じ
      string parseToString(string str, int len);
-  
-     // str を解析して MeCab::Node 型の形態素を返します. 
+
+     // str を解析して MeCab::Node 型の形態素を返します.
      // この形態素は文頭を示すもので, next を順に辿ることで全形態素にアクセスできます
      Node parseToNode(string str, int len);
-  
+
      // parse の Nbest 版です. N に nbest の個数を指定します.
      // この機能を使う場合は, 起動時オプションとして -l 1 を指定する必要があります
      string parseNBest(int N, string str, int len);
-  
+
      // 解析結果を, 確からしいものから順番に取得する場合にこの関数で初期化を行います.
      bool  parseNBestInit(string str, int len);
-  
+
      // parseNbestInit() の後, この関数を順次呼ぶことで, 確からしい解析結果を, 順番に取得できます.
      string next();
-  
+
      // next() と同じですが, MeCab::Node を返します.
      Node  nextNode();
   };
-  
+
   #define MECAB_NOR_NODE  0
   #define MECAB_UNK_NODE  1
   #define MECAB_BOS_NODE  2
   #define MECAB_EOS_NODE  3
-  
+
   struct Node {
 
     struct Node  prev;  // 一つ前の形態素へのポインタ
     struct Node  next;  // 一つ先の形態素へのポインタ
-    
+
     struct Node  enext; // 同じ位置で終わる形態素へのポインタ
     struct Node  bnext; // 同じ開始位置で始まる形態素へのポインタ
-  
-    string surface;             // 形態素の文字列情報 
-  			      
+
+    string surface;             // 形態素の文字列情報
+
     string feature;             // CSV で表記された素性情報
     unsigned int   length;      // 形態素の長さ
     unsigned int   rlength;     // 形態素の長さ(先頭のスペースを含む)
     unsigned int   id;          // 形態素に付与される ユニークID
-    unsigned short rcAttr;      // 右文脈 id 
+    unsigned short rcAttr;      // 右文脈 id
     unsigned short lcAttr;      // 左文脈 id
     unsigned short posid;       // 形態素 ID (未使用)
     unsigned char  char_type;   // 文字種情報
@@ -236,12 +236,12 @@ namespace MeCab {
                                 // #define MECAB_BOS_NODE  2
                                 // #define MECAB_EOS_NODE  3
     unsigned char  isbest;      // ベスト解の場合 1, それ以外 0
-  
+
     float          alpha;       // forward backward の foward log 確率
-    float          beta;        // forward backward の backward log 確率 
+    float          beta;        // forward backward の backward log 確率
     float          prob;        // 周辺確率
                                 // alpha, beta, prob は -l 2 オプションを指定した時に定義されます
-  
+
     short          wcost;       // 単語生起コスト
     long           cost;        // 累積コスト
   };

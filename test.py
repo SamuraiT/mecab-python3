@@ -20,7 +20,7 @@ try:
         print(m.surface, "\t", m.feature)
         m = m.next
         print("EOS")
-        
+
     lattice = MeCab.Lattice()
     t.parse(lattice)
     lattice.set_sentence(sentence)
@@ -30,10 +30,10 @@ try:
         e = lattice.end_nodes(i)
         while b:
             print("B[%d] %s\t%s" % (i, b.surface, b.feature))
-            b = b.bnext 
+            b = b.bnext
         while e:
             print("E[%d] %s\t%s" % (i, e.surface, e.feature))
-            e = e.bnext 
+            e = e.bnext
     print("EOS");
 
     d = t.dictionary_info()
@@ -49,4 +49,3 @@ try:
 
 except RuntimeError as e:
     print("RuntimeError:", e);
-

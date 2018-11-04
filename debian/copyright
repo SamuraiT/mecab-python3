@@ -24,7 +24,7 @@ License: BSD-3-clause
     copyright notice, this list of conditions and the
     following disclaimer in the documentation and/or other
     materials provided with the distribution.
- . 
+ .
   * Neither the name of the Nippon Telegraph and Telegraph Corporation
     nor the names of its contributors may be used to endorse or
     promote products derived from this software without specific
@@ -56,4 +56,3 @@ License: LGPL-2+
  .
  On Debian systems, the complete text of version 2 of the GNU Lesser General
  Public License can be found in `/usr/share/common-licenses/LGPL-2'.
-
