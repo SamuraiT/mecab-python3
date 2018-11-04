@@ -1,7 +1,7 @@
-Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: MeCab
 Upstream-Contact: Taku Kudo <taku@chasen.org>
-Source: http://sf.net/projects/mecab/
+Source: https://github.com/taku910/mecab
 
 Files: *
 Copyright: Taku Kudo <taku@chasen.org>

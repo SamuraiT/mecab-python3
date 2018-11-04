@@ -1,12 +1,45 @@
-python-mecab (1:0.8.0-0local1) unstable; urgency=low
+python-mecab (1:0.8.3-1) unstable; urgency=medium
 
-  * Build from upstream SWIG sources rather than shipping generated
-    code.
+  [ Zack Weinberg ]
+  * Switch upstream to “mecab-python3” PyPI package, which runs SWIG
+    at build time rather than embedding SWIG-generated code, and (therefore)
+    supports Python 3.  This package is versioned independently from
+    MeCab itself, which requires an epoch.
+  * Build using pybuild.
   * Add python3 binary packages.
-  * Bump debhelper compat level to 9.
-  * Bump Standards-Version to 3.9.6.
+  * Remove obsolete Provides: lines.
+  * Demote mecab-jumandic|mecab-ipadic to Recommends, as there are
+    several other packages that also provide a dictionary MeCab can use.
+  * Bump to debhelper compat level 11; declare debhelper compat level via
+    Build-Depends (no other changes required).
+  * Standards-Version 4.2.1 (no changes required).
+  * Add Rules-Requires-Root: no to debian/control.
+  * Enable hardening.
 
- -- Zack Weinberg <zackw@panix.com>  Thu, 15 Oct 2015 16:57:30 -0400
+ -- TANIGUCHI Takaki <takaki@debian.org>  Sun, 04 Nov 2018 11:25:43 -0500
+
+python-mecab (0.99.6-3) UNRELEASED; urgency=medium
+
+  * d/control: Set Vcs-* to salsa.debian.org
+  * d/copyright: Use https protocol in Format field
+  * d/changelog: Remove trailing whitespaces
+  * Remove debian/pycompat, it's not used by any modern Python helper
+  * Convert git repository from git-dpm to gbp layout
+
+ -- Ondřej Nový <onovy@debian.org>  Tue, 13 Feb 2018 10:05:50 +0100
+
+python-mecab (0.99.6-2) UNRELEASED; urgency=medium
+
+  [ Ondřej Nový ]
+  * Fixed VCS URL (https)
+
+  [ TANIGUCHI Takaki ]
+  * Bump Standards-Version to 4.0.0 (without changes)
+  * debian/compat: Bump to 10
+  * Update Homepage info.
+  * debian/watch: Removed.
+
+ -- TANIGUCHI Takaki <takaki@debian.org>  Mon, 17 Jul 2017 12:45:27 +0900
 
 python-mecab (0.99.6-1) unstable; urgency=low
 
