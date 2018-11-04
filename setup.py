@@ -17,13 +17,16 @@ class build_py(_build_py):
         self.run_command("build_ext")
         return _build_py.run(self)
 
+# Read a file that may or may not exist, and decode its contents as
+# UTF-8, regardless of external locale settings.
 def read_file(filename):
     filepath = os.path.join(
         os.path.dirname(os.path.dirname(__file__)), filename)
-    if os.path.exists(filepath):
-        return open(filepath).read()
-    else:
+    try:
+        raw = open(filepath, 'rb').read()
+    except OSError:
         return ''
+    return raw.decode('utf-8')
 
 def mecab_config(arg):
     return os.popen("mecab-config " + arg).readlines()[0].split()
