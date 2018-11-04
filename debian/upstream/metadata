@@ -1,0 +1,12 @@
+Name:           mecab-python3
+Repository:     https://github.com/SamuraiT/mecab-python3
+Bug-Database:   https://github.com/SamuraiT/mecab-python3/issues
+Bug-Submit:     https://github.com/SamuraiT/mecab-python3/issues/new
+Documentation:  https://taku910.github.io/mecab/
+Changelog:      https://taku910.github.io/mecab/#news
+Reference:
+  Type:   misc
+  Author: "Kudo, Taku"
+  Title:  "Mecab: Yet another part-of-speech and morphological analyzer"
+  Year:   2006
+  URL:    https://taku910.github.io/mecab/
