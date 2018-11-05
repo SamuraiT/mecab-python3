@@ -3,12 +3,11 @@
 import os
 
 try:
-    import setuptools
+    from setuptools import setup, Extension
+    from setuptools.command.build_py import build_py as _build_py
 except ImportError:
-    pass
-
-from distutils.core import setup, Extension
-from distutils.command.build_py import build_py as _build_py
+    from distutils.core import setup, Extension
+    from distutils.command.build_py import build_py as _build_py
 
 # Distutils runs build_py and then build_ext, but MeCab.py won't exist
 # until build_ext runs, so subclass build_py to invoke build_ext itself.
@@ -41,7 +40,8 @@ swig_opts.extend("-I"+d for d in inc_dir)
 setup(name = "mecab-python3",
     version = '0.8.3',
     description = 'python wrapper for mecab: Morphological Analysis engine',
-    long_description = read_file('README.rst'),
+    long_description = read_file('README.md'),
+    long_description_content_type = 'text/markdown',
     maintainer = 'Tatsuro Yasukawa',
     maintainer_email = 't.yasukawa01@gmail.com',
     url = 'https://github.com/SamuraiT/mecab-python3',
