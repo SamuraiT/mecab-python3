@@ -2,14 +2,10 @@
 
 import os
 
-try:
-    from setuptools import setup, Extension
-    from setuptools.command.build_py import build_py as _build_py
-except ImportError:
-    from distutils.core import setup, Extension
-    from distutils.command.build_py import build_py as _build_py
+from setuptools import setup, Extension
+from setuptools.command.build_py import build_py as _build_py
 
-# Distutils runs build_py and then build_ext, but MeCab.py won't exist
+# Distutils runs build_py before build_ext, but MeCab.py won't exist
 # until build_ext runs, so subclass build_py to invoke build_ext itself.
 class build_py(_build_py):
     def run(self):
