@@ -9,14 +9,14 @@ This python wrapper for mecab works on both **python3.x** and **python2.x**.
 Installation and Usage
 --------------
 
-```
+```sh
 pip install mecab-python3
 ```
 
 You must have `mecab` and `swig` installed before running `setup.py`.
 For instance, on Debian-based Linux,
 
-```
+```sh
 sudo apt-get install mecab mecab-ipadic-utf8 libmecab-dev swig
 ```
 
@@ -26,7 +26,7 @@ sudo apt-get install mecab mecab-ipadic-utf8 libmecab-dev swig
 
 3. Simple example
 
-```
+```py
 import MeCab
 mecab = MeCab.Tagger ("-Ochasen")
 print(mecab.parse("pythonが大好きです"))
