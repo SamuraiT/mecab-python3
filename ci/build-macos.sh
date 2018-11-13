@@ -3,7 +3,7 @@
 set -ex
 
 brew update
-brwe install openssl readline swig mecab mecab-ipadic
+brew install openssl readline swig mecab mecab-ipadic
 brew outdated pyenv || brew upgrade pyenv
 
 PYTHON_VERSIONS=(2.7.15 3.4.9 3.5.6 3.6.7 3.7.1)
