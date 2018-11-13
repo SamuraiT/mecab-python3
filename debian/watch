@@ -1,12 +1,4 @@
-# The immediate upstream for this software is the PyPI package "mecab-python3",
-# which is maintained at Github: https://github.com/SamuraiT/mecab-python3
-# The file MeCab.i is copied verbatim from MeCab proper, which is also
-# theoretically maintained at Github: https://github.com/taku910/mecab
-# However, there has not been a change that affected that file since
-# 2013, so we currently do not bother monitoring that repository.
-
-version=4
-opts="filenamemangle=s%(?:.*?)?v?(\d[\d.]*)\.tar\.gz%python-mecab-$1.tar.gz%" \
-    https://github.com/SamuraiT/mecab-python3/releases \
-    (?:.*?/)?v?(\d[\d.]*)\.tar\.gz \
-    debian uupdate
+# The immediate upstream for this software is the PyPI package "mecab-python3".
+version=3
+opts=uversionmangle=s/(rc|a|b|c)/~$1/,pgpsigurlmangle=s/$/.asc/ \
+https://pypi.debian.net/mecab-python3/mecab-python3-(.+)\.(?:zip|tgz|tbz|txz|(?:tar\.(?:gz|bz2|xz)))
