@@ -1,35 +1,39 @@
 language: python
+install:
+- pip install coverage coveralls
+- python setup.py install
+script:
+- coverage run test.py
+after_success:
+- coveralls
+addons:
+  apt:
+    packages:
+    - libmecab-dev
+    - mecab
+    - mecab-ipadic-utf8
+    - swig
+
 matrix:
   include:
   - dist: trusty
-    addons:
-      apt:
-        packages:
-        - libmecab-dev
-        - mecab
-        - mecab-ipadic-utf8
-        - swig
-    python:
-    - '2.7'
-    - '3.5'
-    - '3.6'
-    install:
-    - pip install coverage coveralls
-    - python setup.py install
-    script:
-    - coverage run test.py
-    after_success:
-    - coveralls
+    python: '2.7'
+  - dist: trusty
+    python: '3.5'
+  - dist: trusty
+    python: '3.6'
   - os: osx
     language: generic
     env: DEPLOY="true"
     install: true
     script: "./ci/build-macos.sh"
+    after_succes: true
   - service: docker
     sudo: required
     env: DEPLOY="true"
     install: true
     script: "docker run --rm -v `pwd`:/io quay.io/pypa/manylinux1_x86_64 /io/ci/build-manylinux.sh"
+    after_succes: true
 deploy:
   provider: releases
   file_glob: true

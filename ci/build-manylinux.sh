@@ -29,6 +29,8 @@ pushd mecab-ipadic-2.7.0-20070801
 ./configure --with-charset=utf8 && make && make install && popd
 rm -rf mecab-ipadic-2.7.0-20070801*
 
+cd /io
+
 #Compile wheels
 for PYBIN in /opt/python/*/bin; do
     "${PYBIN}/python" setup.py bdist_wheel
