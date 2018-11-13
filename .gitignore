@@ -24,3 +24,4 @@ debian/python-mecab.*
 debian/python-mecab/
 debian/python3-mecab.*
 debian/python3-mecab/
+repaired_wheels/

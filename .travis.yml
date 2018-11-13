@@ -1,25 +1,39 @@
-dist: trusty
 language: python
 
-addons:
-  apt:
-    packages:
-     - libmecab-dev
-     - mecab
-     - mecab-ipadic-utf8
-     - swig
+matrix:
+  include:
+  - dist: trusty
+    addons:
+      apt:
+        packages:
+        - libmecab-dev
+        - mecab
+        - mecab-ipadic-utf8
+        - swig
 
-python:
- - "2.7"
- - "3.5"
- - "3.6"
+    python:
+    - "2.7"
+    - "3.5"
+    - "3.6"
 
-install:
- - pip install coverage coveralls
- - python setup.py install
+    install:
+    - pip install coverage coveralls
+    - python setup.py install
 
-script:
- - coverage run test.py
+    script:
+    - coverage run test.py
 
-after_success:
- - coveralls
+    after_success:
+    - coveralls
+
+  - os: osx
+    env: DEPLOY="true"
+    install: true
+    script: ./ci/build-macos.sh
+
+  - service: docker
+    sudo: required
+    env: DEPLOY="true"
+    install: true
+    script: ./ci/build-manylinux.sh
+
