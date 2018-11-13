@@ -28,7 +28,7 @@ matrix:
     sudo: required
     env: DEPLOY="true"
     install: true
-    script: "./ci/build-manylinux.sh"
+    script: "docker run --rm -v `pwd`:/io quay.io/pypa/manylinux1_x86_64 /io/ci/build-manylinux.sh"
 deploy:
   provider: releases
   file_glob: true
