@@ -18,5 +18,4 @@ for PYTHON in ${PYTHON_VERSIONS[@]}; do
     "${PYTHON_PATH}/python" -c "import MeCab"
 done
 
-$(pyenv root)/versions/${PYTHON}/bin/python setup.py sdist
 ls dist/
