@@ -21,6 +21,7 @@ matrix:
     after_success:
     - coveralls
   - os: osx
+    language: generic
     env: DEPLOY="true"
     install: true
     script: "./ci/build-macos.sh"
