@@ -24,25 +24,41 @@ def read_file(filename):
         return ''
     return raw.decode('utf-8')
 
-# Ensure use of the "C" locale when invoking mecab-config.
-# ("C.UTF-8" would be better if available, but there's no good way
-# to find out whether it's available.)
-clocale_env = {}
-for k, v in os.environ.items():
-    if not (k.startswith("LC_") or k == "LANG" or k == "LANGUAGE"):
-        clocale_env[k] = v
-clocale_env["LC_ALL"] = "C"
+# We can build using either a local bundled copy of libmecab, or
+# a system-provided one.
+if "BUNDLE_LIBMECAB" in os.environ:
+    subprocess.check_call(["./build-bundled-libmecab.sh"])
+    inc_dir  = ["build/libmecab/mecab/src"]
+    lib_dirs = ["build/libmecab/mecab/src"]
 
-def mecab_config(arg):
-    output = subprocess.check_output(["mecab-config", arg],
-                                     env=clocale_env)
-    if not isinstance(output, str):
-        output = output.decode("utf-8")
-    return output.split()
+    for line in read_file("build/libmecab/mecab/mecab-config").splitlines():
+        if "sed s/-l//g" in line:
+            libs = [word[2:] for word in line.split()
+                    if word[:2] == "-l"]
+            break
+    else:
+        libs = ["mecab"]
 
-inc_dir  = mecab_config("--inc-dir")
-lib_dirs = mecab_config("--libs-only-L")
-libs     = mecab_config("--libs-only-l")
+else:
+    # Ensure use of the "C" locale when invoking mecab-config.
+    # ("C.UTF-8" would be better if available, but there's no good way
+    # to find out whether it's available.)
+    clocale_env = {}
+    for k, v in os.environ.items():
+        if not (k.startswith("LC_") or k == "LANG" or k == "LANGUAGE"):
+            clocale_env[k] = v
+    clocale_env["LC_ALL"] = "C"
+
+    def mecab_config(arg):
+        output = subprocess.check_output(["mecab-config", arg],
+                                         env=clocale_env)
+        if not isinstance(output, str):
+            output = output.decode("utf-8")
+        return output.split()
+
+    inc_dir  = mecab_config("--inc-dir")
+    lib_dirs = mecab_config("--libs-only-L")
+    libs     = mecab_config("--libs-only-l")
 
 swig_opts = ['-shadow', '-c++']
 swig_opts.extend("-I"+d for d in inc_dir)
