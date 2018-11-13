@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import os
+import subprocess
 
 from setuptools import setup, Extension
 from setuptools.command.build_py import build_py as _build_py
@@ -23,8 +24,21 @@ def read_file(filename):
         return ''
     return raw.decode('utf-8')
 
+# Ensure use of the "C" locale when invoking mecab-config.
+# ("C.UTF-8" would be better if available, but there's no good way
+# to find out whether it's available.)
+clocale_env = {}
+for k, v in os.environ.items():
+    if not (k.startswith("LC_") or k == "LANG" or k == "LANGUAGE"):
+        clocale_env[k] = v
+clocale_env["LC_ALL"] = "C"
+
 def mecab_config(arg):
-    return os.popen("mecab-config " + arg).readlines()[0].split()
+    output = subprocess.check_output(["mecab-config", arg],
+                                     env=clocale_env)
+    if not isinstance(output, str):
+        output = output.decode("utf-8")
+    return output.split()
 
 inc_dir  = mecab_config("--inc-dir")
 lib_dirs = mecab_config("--libs-only-L")
@@ -34,7 +48,7 @@ swig_opts = ['-shadow', '-c++']
 swig_opts.extend("-I"+d for d in inc_dir)
 
 setup(name = "mecab-python3",
-    version = '0.996.1',
+    version = '0.996.2',
     description = 'python wrapper for mecab: Morphological Analysis engine',
     long_description = read_file('README.md'),
     long_description_content_type = 'text/markdown',
