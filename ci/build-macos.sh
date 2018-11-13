@@ -10,6 +10,7 @@ PYTHON_VERSIONS=(2.7.15 3.4.9 3.5.6 3.6.7 3.7.1)
 for PYTHON in ${PYTHON_VERSIONS[@]}; do
     pyenv install $PYTHON
     PYTHON_PATH="$(pyenv root)/versions/${PYTHON}/bin"
+    ${PYTHON_PATH}/python -m pip install -U setuptools
     ${PYTHON_PATH}/python setup.py bdist_wheel
 done
 
