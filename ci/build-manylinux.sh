@@ -22,13 +22,6 @@ make install
 popd
 rm -rf mecab-0.996*
 
-# Install ipadic
-wget "https://drive.google.com/uc?export=download&id=0B4y35FiV1wh7MWVlSDBCSXZMTXM" -O mecab-ipadic-2.7.0-20070801.tar.gz
-tar zxfv mecab-ipadic-2.7.0-20070801.tar.gz
-pushd mecab-ipadic-2.7.0-20070801
-./configure --with-charset=utf8 && make && make install && popd
-rm -rf mecab-ipadic-2.7.0-20070801*
-
 cd /io
 
 #Compile wheels
