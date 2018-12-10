@@ -68,6 +68,10 @@
 %immutable mecab_node_t::cost;
 %immutable mecab_node_t::surface;
 
+%extend mecab_node_t {
+  char *surface;
+}
+
 %extend MeCab::Tagger {
    Tagger(const char *argc);
    Tagger();
@@ -140,6 +144,13 @@ MeCab::Lattice* new_MeCab_Lattice () {
 void delete_MeCab_Lattice (MeCab::Lattice *t) {
   delete t;
   t = 0;
+}
+
+char* mecab_node_t_surface_get(mecab_node_t *n) {
+  char *s = new char [n->length + 1];
+  memcpy (s, n->surface, n->length);
+  s[n->length] = '\0';
+  return s;
 }
 
 %}
