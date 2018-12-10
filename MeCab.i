@@ -68,6 +68,8 @@
 %immutable mecab_node_t::cost;
 %immutable mecab_node_t::surface;
 
+%newobject surface;
+
 %extend mecab_node_t {
   char *surface;
 }
