@@ -13,6 +13,8 @@
 #endif
 %}
 
+%newobject surface;
+
 %exception {
   try { $action }
   catch (char *e) { SWIG_exception (SWIG_RuntimeError, e); }
@@ -67,8 +69,6 @@
 %immutable mecab_node_t::wcost;
 %immutable mecab_node_t::cost;
 %immutable mecab_node_t::surface;
-
-%newobject surface;
 
 %extend mecab_node_t {
   char *surface;
@@ -154,8 +154,8 @@ char* mecab_node_t_surface_get(mecab_node_t *n) {
   s[n->length] = '\0';
   return s;
 }
-
 %}
+
 %include "mecab.h"
 
 %pythoncode %{
