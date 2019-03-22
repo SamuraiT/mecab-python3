@@ -50,7 +50,7 @@ fi
 # Override CFLAGS and CXXFLAGS to produce position-independent code,
 # even though we're only building a static library, because it will
 # be linked into a shared object (the Python extension module).
-# Only build the actual libary, not the utilities.
+# Only build the actual library, not the utilities.
 cd src
 make CFLAGS="-g -O2 -fPIC" CXXFLAGS="-g -O2 -fPIC" libmecab.la
 
