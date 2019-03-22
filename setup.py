@@ -6,6 +6,8 @@ import subprocess
 from setuptools import setup, Extension
 from setuptools.command.build_py import build_py as _build_py
 
+SRCDIR = os.path.abspath(os.path.dirname(__file__))
+
 # Distutils runs build_py before build_ext, but MeCab.py won't exist
 # until build_ext runs, so subclass build_py to invoke build_ext itself.
 class build_py(_build_py):
@@ -13,23 +15,23 @@ class build_py(_build_py):
         self.run_command("build_ext")
         return _build_py.run(self)
 
-# Read a file that may or may not exist, and decode its contents as
-# UTF-8, regardless of external locale settings.
+# Read a file within the source tree that may or may not exist, and
+# decode its contents as UTF-8, regardless of external locale settings.
 def read_file(filename):
-    filepath = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), filename)
+    filepath = os.path.join(SRCDIR, filename)
     try:
         raw = open(filepath, 'rb').read()
-    except OSError:
+    except (IOError, OSError):
         return ''
     return raw.decode('utf-8')
 
 # We can build using either a local bundled copy of libmecab, or
 # a system-provided one.
 if "BUNDLE_LIBMECAB" in os.environ:
-    subprocess.check_call(["./build-bundled-libmecab.sh"])
-    inc_dir  = ["build/libmecab/mecab/src"]
-    lib_dirs = ["build/libmecab/mecab/src"]
+    subprocess.check_call(["./build-bundled-libmecab.sh"],
+                          cwd=SRCDIR)
+    inc_dir  = [os.path.join(SRCDIR, "build/libmecab/mecab/src")]
+    lib_dirs = [os.path.join(SRCDIR, "build/libmecab/mecab/src")]
 
     for line in read_file("build/libmecab/mecab/mecab-config").splitlines():
         if "sed s/-l//g" in line:
