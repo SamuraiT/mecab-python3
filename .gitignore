@@ -15,6 +15,7 @@ MeCab_wrap.c*
 __pycache__/
 *.egg-info/
 .pybuild/
+.tox/
 build/
 dist/
 debian/.debhelper

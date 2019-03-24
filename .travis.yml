@@ -1,12 +1,6 @@
 dist: xenial
 language: python
-
-addons:
-  apt:
-    packages:
-     - libmecab-dev
-     - mecab-ipadic-utf8
-     - swig
+sudo: true
 
 python:
  - "2.7"
@@ -15,8 +9,8 @@ python:
  - "3.6"
  - "3.7"
 
-install:
- - python setup.py install
+before_install: |
+  sudo apt-get -y install swig libmecab-dev mecab-ipadic-utf8
 
-script:
- - python test.py
+install: pip install tox-travis
+script: tox -vvv
