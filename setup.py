@@ -31,7 +31,8 @@ def read_file(filename):
 def maybe_build_libmecab_and_adjust_flags(ext):
     if USE_BUNDLED_LIBMECAB:
         subprocess.check_call([
-            os.path.join(SRCDIR, "scripts/build-bundled-libmecab.sh"),
+            sys.executable,
+            os.path.join(SRCDIR, "scripts/build-bundled-libmecab.py"),
             SRCDIR
         ])
         inc_dir  = [os.path.join(SRCDIR, "build/libmecab/mecab/src")]

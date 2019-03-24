@@ -1,24 +1,12 @@
-dist: xenial
-language: python
-sudo: true
+language: generic
 
-python:
- - "2.7"
- - "3.4"
- - "3.5"
- - "3.6"
- - "3.7"
+matrix:
+  include:
+    - os: linux
+      dist: xenial
+      env: DRIVER=tox MECAB=bundled
+    - os: linux
+      dist: xenial
+      env: DRIVER=tox MECAB=system
 
-env:
- - "MECAB=system"
- - "MECAB=bundled"
-
-before_install: |
-  pkg_deps="swig mecab-ipadic-utf8"
-  if [ $MECAB = system ]; then
-    pkg_deps="$pkg_deps libmecab-dev"
-  fi
-  sudo apt-get -y install $pkg_deps
-
-install: pip install tox-travis
-script: tox -vvv
+script: ./scripts/travis-script.py
