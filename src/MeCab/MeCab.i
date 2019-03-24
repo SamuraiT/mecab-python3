@@ -82,6 +82,16 @@
    }
 }
 
+#ifdef SWIGPYTHON
+/* "Builtin" codegen for python can't handle an overload set with some
+   members static and some not.  Just ignoring the problem overload
+   doesn't work, we have to ignore the whole set and then put back the
+   ones we want.  */
+%ignore MeCab::Tagger::parse;
+%rename("%s") MeCab::Tagger::parse(Lattice *) const;
+%rename("%s") MeCab::Tagger::parse(const char *);
+#endif
+
 %extend MeCab::Model {
    Model(const char *argc);
    Model();
@@ -156,6 +166,7 @@ char* mecab_node_t_surface_get(mecab_node_t *n) {
 }
 %}
 
+#define SIWG /* compensate for typos in mecab.h */
 %include "mecab.h"
 
 %pythoncode %{
