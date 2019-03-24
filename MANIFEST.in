@@ -1,6 +1,5 @@
 include *.md *.html
 include AUTHORS BSD GPL LGPL COPYING
-include test.py
 include MANIFEST.in
-include build-bundled-mecab.sh
-exclude MeCab.py
+include scripts/build-bundled-libmecab.sh
+exclude src/MeCab/MeCab.py
