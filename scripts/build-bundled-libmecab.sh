@@ -18,6 +18,9 @@ LIBMECAB_REV="3a07c4eefaffb4e7a0690a7f4e5e0263d3ddb8a3"
 
 LIBMECAB_DIR="build/libmecab"
 
+if [ -n "$1" ]; then
+    cd "$1"
+fi
 if [ ! -d "$LIBMECAB_DIR" ]; then
     mkdir -p "$LIBMECAB_DIR"
 fi

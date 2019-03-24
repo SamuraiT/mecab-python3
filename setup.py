@@ -9,6 +9,7 @@ from setuptools.command.build_ext import build_ext as _build_ext
 from distutils import log as setup_log
 
 SRCDIR = os.path.abspath(os.path.dirname(__file__))
+USE_BUNDLED_LIBMECAB = "BUNDLE_LIBMECAB" in os.environ
 
 # Read a file within the source tree that may or may not exist, and
 # decode its contents as UTF-8, regardless of external locale settings.
@@ -20,49 +21,62 @@ def read_file(filename):
         return ""
     return raw.decode("utf-8")
 
-# We can build using either a local bundled copy of libmecab, or
-# a system-provided one.
-if "BUNDLE_LIBMECAB" in os.environ:
-    subprocess.check_call(["./build-bundled-libmecab.sh"],
-                          cwd=SRCDIR)
-    inc_dir  = [os.path.join(SRCDIR, "build/libmecab/mecab/src")]
-    lib_dirs = [os.path.join(SRCDIR, "build/libmecab/mecab/src")]
+# We can build using either a local bundled copy of libmecab, or a
+# system-provided one.  Delay deciding which of these to do until
+# `build_ext` is invoked, because if `build_ext` isn't going to be
+# invoked, we shouldn't either attempt to build the bundled copy
+# or run the external `mecab-config` utility.
+def maybe_build_libmecab_and_adjust_flags(ext):
+    if USE_BUNDLED_LIBMECAB:
+        subprocess.check_call([
+            os.path.join(SRCDIR, "scripts/build-bundled-libmecab.sh"),
+            SRCDIR
+        ])
+        inc_dir  = [os.path.join(SRCDIR, "build/libmecab/mecab/src")]
+        lib_dirs = [os.path.join(SRCDIR, "build/libmecab/mecab/src")]
 
-    for line in read_file("build/libmecab/mecab/mecab-config").splitlines():
-        if "sed s/-l//g" in line:
-            libs = [word[2:] for word in line.split()
-                    if word[:2] == "-l"]
-            break
+        mcdata = read_file("build/libmecab/mecab/mecab-config")
+        for line in mcdata.splitlines():
+            if "sed s/-l//g" in line:
+                libs = [word[2:] for word in line.split()
+                        if word[:2] == "-l"]
+                break
+        else:
+            libs = ["mecab"]
+
     else:
-        libs = ["mecab"]
+        # Ensure use of the "C" locale when invoking mecab-config.
+        # ("C.UTF-8" would be better if available, but there's no
+        # good way to find out whether it's available.)
+        clocale_env = {}
+        for k, v in os.environ.items():
+            if not (k.startswith("LC_") or k == "LANG" or k == "LANGUAGE"):
+                clocale_env[k] = v
+        clocale_env["LC_ALL"] = "C"
 
-else:
-    # Ensure use of the "C" locale when invoking mecab-config.
-    # ("C.UTF-8" would be better if available, but there's no good way
-    # to find out whether it's available.)
-    clocale_env = {}
-    for k, v in os.environ.items():
-        if not (k.startswith("LC_") or k == "LANG" or k == "LANGUAGE"):
-            clocale_env[k] = v
-    clocale_env["LC_ALL"] = "C"
+        def mecab_config(arg):
+            output = subprocess.check_output(["mecab-config", arg],
+                                             env=clocale_env)
+            if not isinstance(output, str):
+                output = output.decode("utf-8")
+            return output.split()
 
-    def mecab_config(arg):
-        output = subprocess.check_output(["mecab-config", arg],
-                                         env=clocale_env)
-        if not isinstance(output, str):
-            output = output.decode("utf-8")
-        return output.split()
+        inc_dir  = mecab_config("--inc-dir")
+        lib_dirs = mecab_config("--libs-only-L")
+        libs     = mecab_config("--libs-only-l")
 
-    inc_dir  = mecab_config("--inc-dir")
-    lib_dirs = mecab_config("--libs-only-L")
-    libs     = mecab_config("--libs-only-l")
+    swig_opts = ["-O", "-builtin", "-c++"]
 
-swig_opts = ["-O", "-builtin", "-c++"]
+    if sys.version_info.major >= 3:
+        swig_opts.append("-py3")
 
-if sys.version_info.major >= 3:
-    swig_opts.append("-py3")
+    swig_opts.extend("-I"+d for d in inc_dir)
 
-swig_opts.extend("-I"+d for d in inc_dir)
+    ext.include_dirs = inc_dir
+    ext.library_dirs = lib_dirs
+    ext.libraries    = libs
+    ext.swig_opts    = swig_opts
+    ext.extra_compile_args = ["-Wno-unused-variable"]
 
 # After running SWIG, discard the unwanted Python-level wrapper
 # (there doesn't seem to be any way to get SWIG not to generate this)
@@ -86,6 +100,8 @@ def discard_swig_wrappers(ext):
 
 class build_ext(_build_ext):
     def build_extension(self, ext):
+        if ext.name == "MeCab._MeCab":
+            maybe_build_libmecab_and_adjust_flags(ext)
         _build_ext.build_extension(self, ext)
         if ext.name == "MeCab._MeCab":
             discard_swig_wrappers(ext)
@@ -103,13 +119,7 @@ setup(name = "mecab-python3",
     package_dir = {"": "src"},
     packages = ["MeCab"],
     ext_modules = [
-        Extension("MeCab._MeCab",
-                  ["src/MeCab/MeCab.i"],
-                  include_dirs = inc_dir,
-                  library_dirs = lib_dirs,
-                  libraries    = libs,
-                  swig_opts    = swig_opts,
-                  extra_compile_args = ["-Wno-unused-variable"])
+        Extension("MeCab._MeCab", ["src/MeCab/MeCab.i"])
     ],
     classifiers = [
         "Programming Language :: Python",
