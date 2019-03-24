@@ -20,10 +20,10 @@ class build_py(_build_py):
 def read_file(filename):
     filepath = os.path.join(SRCDIR, filename)
     try:
-        raw = open(filepath, 'rb').read()
+        raw = open(filepath, "rb").read()
     except (IOError, OSError):
-        return ''
-    return raw.decode('utf-8')
+        return ""
+    return raw.decode("utf-8")
 
 # We can build using either a local bundled copy of libmecab, or
 # a system-provided one.
@@ -62,18 +62,18 @@ else:
     lib_dirs = mecab_config("--libs-only-L")
     libs     = mecab_config("--libs-only-l")
 
-swig_opts = ['-shadow', '-c++']
+swig_opts = ["-shadow", "-c++"]
 swig_opts.extend("-I"+d for d in inc_dir)
 
 setup(name = "mecab-python3",
-    version = '0.996.2',
-    description = 'python wrapper for mecab: Morphological Analysis engine',
-    long_description = read_file('README.md'),
-    long_description_content_type = 'text/markdown',
-    maintainer = 'Tatsuro Yasukawa',
-    maintainer_email = 't.yasukawa01@gmail.com',
-    url = 'https://github.com/SamuraiT/mecab-python3',
-    license = 'BSD',
+    version = "0.996.2",
+    description = "python wrapper for mecab: Morphological Analysis engine",
+    long_description = read_file("README.md"),
+    long_description_content_type = "text/markdown",
+    maintainer = "Tatsuro Yasukawa",
+    maintainer_email = "t.yasukawa01@gmail.com",
+    url = "https://github.com/SamuraiT/mecab-python3",
+    license = "BSD",
     cmdclass = {"build_py": build_py},
     py_modules = ["MeCab"],
     ext_modules = [
