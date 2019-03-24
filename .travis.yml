@@ -13,14 +13,10 @@ env:
  - "MECAB=system"
  - "MECAB=bundled"
 
-matrix:
-  allow_failures:
-    - env: MECAB=bundled
-
 before_install: |
-  pkg_deps=swig
+  pkg_deps="swig mecab-ipadic-utf8"
   if [ $MECAB = system ]; then
-    pkg_deps="$pkg_deps libmecab-dev mecab-ipadic-utf8"
+    pkg_deps="$pkg_deps libmecab-dev"
   fi
   sudo apt-get -y install $pkg_deps
 

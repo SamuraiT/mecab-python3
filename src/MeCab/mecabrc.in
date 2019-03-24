@@ -1,0 +1,14 @@
+;
+; This template libmecab configuration file is used only when libmecab
+; is bundled with python-mecab.
+;
+
+dicdir = @DICDIR@
+; userdic = /nonexistent/user.dic
+
+; output-format-type = wakati
+; input-buffer-size = 8192
+
+; node-format = %m\n
+; bos-format = %S\n
+; eos-format = EOS\n

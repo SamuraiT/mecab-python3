@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 
+import glob
 import os
 import subprocess
 import sys
 
 from setuptools import setup, Extension
 from setuptools.command.build_ext import build_ext as _build_ext
+from setuptools.command.build_py import build_py as _build_py
 from distutils import log as setup_log
 
 SRCDIR = os.path.abspath(os.path.dirname(__file__))
@@ -106,6 +108,83 @@ class build_ext(_build_ext):
         if ext.name == "MeCab._MeCab":
             discard_swig_wrappers(ext)
 
+# The bundled libmecab needs a bundled dictionary, which we copy
+# from somewhere in the file system.
+def dicdir_from_mecabrc(rc_fname):
+    try:
+        with open(rc_fname, "rt") as fp:
+            for line in fp:
+                line = line.strip()
+                if not line or line[0] == ';':
+                    continue
+                if line[:6] == "dicdir":
+                    line = line[6:].lstrip()
+                    if not line:
+                        return None
+
+                    if line[0] == '=':
+                        line = line[1:].lstrip()
+                    if line:
+                        return line
+        return None
+    except (IOError, OSError) as e:
+        return None
+
+def mecab_dictionary_contents():
+    dicdir = None
+    if "MECAB_DICDIR" in os.environ:
+        d = os.environ["MECAB_DICDIR"]
+        if d and os.path.isdir(d):
+            dicdir = os.path.abspath(d)
+    if dicdir is None and "MECAB_DICPATH" in os.environ:
+        for d in os.environ["MECAB_DICPATH"].split(os.pathsep):
+            if d and os.path.isdir(d):
+                dicdir = os.path.abspath(d)
+                break
+    if dicdir is None and "MECABRC" in os.environ:
+        d = dicdir_from_mecabrc(os.environ["MECABRC"])
+        if d and os.path.isdir(d):
+            dicdir = os.path.abspath(d)
+    if dicdir is None:
+        for rc in ["/usr/local/etc/mecabrc", "/etc/mecabrc"]:
+            d = dicdir_from_mecabrc(rc)
+            if d and os.path.isdir(d):
+                dicdir = os.path.abspath(d)
+                break
+    if dicdir is None:
+        return None, []
+
+    setup_log.info("MeCab dictionary found in {}".format(dicdir))
+    cwd = os.getcwd()
+    os.chdir(dicdir)
+    dicfiles = glob.glob("*")
+    os.chdir(cwd)
+    return dicdir, dicfiles
+
+class build_py(_build_py):
+    def _get_data_files(self):
+        self.analyze_manifest()
+        data_files = []
+        for pkg in (self.packages or ()):
+            data_files.extend(self._get_pkg_data_files(pkg))
+        return data_files
+
+    def _get_pkg_data_files(self, package):
+        data = _build_py._get_pkg_data_files(self, package)
+        if package == "MeCab" and USE_BUNDLED_LIBMECAB:
+            d_package, d_srcdir, d_builddir, d_filenames = data
+            assert d_package == package
+            d_filenames.append("mecabrc.in")
+            yield d_package, d_srcdir, d_builddir, d_filenames
+
+            dicdir, dicfiles = mecab_dictionary_contents()
+            if dicdir and dicfiles:
+                yield (d_package, dicdir,
+                       os.path.join(d_builddir, "dic"),
+                       dicfiles)
+        else:
+            yield data
+
 setup(name = "mecab-python3",
     version = "0.996.2",
     description = "python wrapper for mecab: Morphological Analysis engine",
@@ -115,7 +194,10 @@ setup(name = "mecab-python3",
     maintainer_email = "t.yasukawa01@gmail.com",
     url = "https://github.com/SamuraiT/mecab-python3",
     license = "BSD",
-    cmdclass = {"build_ext": build_ext},
+    cmdclass = {
+        "build_ext": build_ext,
+        "build_py": build_py
+    },
     package_dir = {"": "src"},
     packages = ["MeCab"],
     ext_modules = [
