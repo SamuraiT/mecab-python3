@@ -3,16 +3,19 @@
 # as well as newer versions; in particular, subprocess.run cannot
 # be used, and we need fallbacks for shlex.quote and os.cpu_count.
 
+import hashlib
 import locale
 import os
 import subprocess
 import sys
+import tempfile
 import time
 
 __all__ = [
     "get_parallel_jobs",
     "sh_quote", "log_cmd", "run", "run_output",
-    "chdir", "mkdir_p", "touch", "symlink"
+    "activate_venv", "chdir", "mkdir_p", "setenv", "symlink", "touch",
+    "Downloadable"
 ]
 
 OUTPUT_ENCODING = locale.getpreferredencoding(True)
@@ -57,6 +60,7 @@ except ImportError:
 
 def log_cmd(argv):
     sys.stderr.write("+ " + " ".join(sh_quote(arg) for arg in argv) + "\n")
+    sys.stderr.flush()
 
 def run(*argv):
     log_cmd(argv)
@@ -113,8 +117,34 @@ def run_output(*argv):
         sys.exit(1)
 
 #
-# Things that don't require spawning a subprocess (or wouldn't work)
+# Things that don't require spawning a subprocess or wouldn't work in
+# a subprocess.
 #
+
+def activate_venv(venv_dir):
+    # This does approximately what ". ${venv_dir}/bin/activate" would do
+    # if this were a shell script.  The major difference is that we make
+    # no provision for deactivating the venv again, because nobody needs
+    # that at the moment.  We also don't dink with PS1.
+    venv_dir = os.path.abspath(venv_dir)
+    if os.path.isfile(os.path.join(venv_dir, "bin", "activate")):
+        bin_dir = "bin"
+    elif os.path.isfile(os.path.join(venv_dir, "Scripts", "activate")):
+        bin_dir = "Scripts"
+    else:
+        sys.stderr.write("* {!r} does not appear to be a virtualenv"
+                         .format(venv_dir))
+        sys.exit(1)
+
+    os.environ["VIRTUAL_ENV"] = venv_dir
+    os.environ["PATH"] = (
+        os.path.join(venv_dir, bin_dir) +
+        os.pathsep +
+        os.environ["PATH"]
+    )
+    os.environ.pop("PYTHONHOME", None)
+
+    log_cmd(["activate_venv", venv_dir])
 
 def chdir(dest):
     log_cmd(["cd", dest])
@@ -139,14 +169,9 @@ def mkdir_p(dir):
                 sh_quote(e.filename), e.strerror))
         sys.exit(1)
 
-def touch(path):
-    log_cmd(["touch", path])
-    try:
-        os.utime(path, None)
-    except OSError as e:
-        sys.stderr.write("* touch: {}: {}\n".format(
-            sh_quote(path), e.strerror))
-        sys.exit(1)
+def setenv(key, value):
+    log_cmd(["export", "{}={}".format(key, value)])
+    os.environ[key] = value
 
 def symlink(src, dest):
     log_cmd(["ln", "-s", src, dest])
@@ -160,3 +185,57 @@ def symlink(src, dest):
             sys.stderr.write("* ln: {}: {}\n".format(
                 sh_quote(dest), e.strerror))
         sys.exit(1)
+
+def touch(path):
+    log_cmd(["touch", path])
+    try:
+        os.utime(path, None)
+    except OSError as e:
+        sys.stderr.write("* touch: {}: {}\n".format(
+            sh_quote(path), e.strerror))
+        sys.exit(1)
+
+#
+# Downloading tarballs
+#
+
+class Downloadable(object):
+    def __init__(self, name, url, hash, unpacked_name=None):
+        self.name = name
+        self.url  = url
+        self.hash = hash
+        self.unpacked_name = unpacked_name
+
+    def retrieve(self, destdir="."):
+        fd = None
+        tfname = None
+        try:
+            (fd, tfname) = tempfile.mkstemp(prefix=self.name + ".",
+                                            dir=destdir)
+            run("curl", "-L", "-o", tfname, self.url)
+
+            h = hashlib.sha256()
+            while True:
+                blk = os.read(fd, 8192)
+                if not blk: break
+                h.update(blk)
+
+            digest = h.hexdigest()
+            if digest != self.hash:
+                sys.stderr.write("* SHA256 mismatch for {}:\n"
+                                 "*  expected {}\n"
+                                 "*       got {}\n"
+                                 .format(self.url, self.hash, digest))
+                sys.exit(1)
+
+            os.close(fd)
+            fd = None
+            os.rename(tfname, os.path.join(destdir, self.name))
+            return
+
+        except:
+            if fd is not None:
+                os.close(fd)
+            if tfname is not None:
+                os.unlink(tfname)
+            raise
