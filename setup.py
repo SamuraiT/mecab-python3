@@ -38,14 +38,20 @@ def maybe_build_libmecab_and_adjust_flags(ext):
         inc_dir  = [os.path.join(SRCDIR, "build/libmecab/mecab/src")]
         lib_dirs = [os.path.join(SRCDIR, "build/libmecab/mecab/src")]
 
-        mcdata = read_file("build/libmecab/mecab/mecab-config")
-        for line in mcdata.splitlines():
-            if "sed s/-l//g" in line:
-                libs = [word[2:] for word in line.split()
-                        if word[:2] == "-l"]
-                break
-        else:
-            libs = ["mecab"]
+        # mecab-config --libs-only-l will produce the list of
+        # libraries needed to link with a hypothetical *shared*
+        # libmecab; we built a *static* libmecab, so what we actually
+        # need is -lmecab + the value of the LIBS substitution
+        # variable from the Makefile.
+        libs = ["mecab"]
+        with open(os.path.join(SRCDIR, "build/libmecab/mecab/Makefile"),
+                  "rt") as fp:
+            for line in fp:
+                if line.startswith("LIBS ="):
+                    for lib in line.partition("=")[2].split():
+                        if lib[:2] == "-l":
+                            libs.append(lib[2:])
+                    break
 
     else:
         # Ensure use of the "C" locale when invoking mecab-config.
@@ -80,6 +86,13 @@ def maybe_build_libmecab_and_adjust_flags(ext):
     ext.libraries    = libs
     ext.swig_opts    = swig_opts
     ext.extra_compile_args = ["-Wno-unused-variable"]
+
+    sys.stderr.write("Extension build configuration adjusted:\n"
+                     " include_dirs = {!r}\n"
+                     " library_dirs = {!r}\n"
+                     " libraries    = {!r}\n"
+                     " swig_opts    = {!r}\n"
+                     .format(inc_dir, lib_dirs, libs, swig_opts))
 
 # After running SWIG, discard the unwanted Python-level wrapper
 # (there doesn't seem to be any way to get SWIG not to generate this)

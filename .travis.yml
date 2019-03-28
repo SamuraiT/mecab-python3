@@ -4,13 +4,15 @@ matrix:
   include:
     - os: linux
       dist: xenial
-      env: DRIVER=tox MECAB=bundled
+      env: DRIVER=tox MECAB=system
     - os: linux
       dist: xenial
-      env: DRIVER=tox MECAB=system
+      env: DRIVER=tox MECAB=bundled
     - os: linux
       dist: xenial
       services: docker
       env: DRIVER=cibuildwheel MECAB=bundled
+    - os: osx
+      env: DRIVER=cibuildwheel MECAB=bundled
 
-script: ./scripts/travis-script.py
+script: exec python3 ./scripts/travis-script.py

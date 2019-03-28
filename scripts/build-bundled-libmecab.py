@@ -19,8 +19,51 @@ LIBMECAB_REV = "3a07c4eefaffb4e7a0690a7f4e5e0263d3ddb8a3"
 
 LIBMECAB_DIR = "build/libmecab"
 
+# The libmecab we build will be statically linked into the Python
+# extension module, so we need to match the compilation flags used
+# for module code.  Get distutils to tell us what those are.
+def compile_flags_for_platform():
+
+    from distutils.ccompiler import new_compiler
+    from distutils.sysconfig import get_config_var, customize_compiler
+
+    def filter_flags(flags):
+        rv = []
+        for flag in flags:
+            # Discard -I switches, these are only relevant when
+            # building the core Python interpreter.
+            # Discard warnings flags, we are building code that hasn't
+            # been held to anything like the standard required by the
+            # Python devteam.
+            if flag[:2] in ("-I", "-W"): continue
+
+            rv.append(flag)
+
+        return rv
+
+    ccdata = new_compiler()
+    customize_compiler(ccdata)
+
+    CC  = ccdata.compiler_so[0]
+    CXX = ccdata.compiler_cxx[0]
+    CFLAGS = " ".join(filter_flags(ccdata.compiler_so[1:]))
+
+    # On OSX, we must also set the environment variable
+    # MACOSX_DEPLOYMENT_TARGET to match the setting distutils will use.
+    MDT = get_config_var("MACOSX_DEPLOYMENT_TARGET") or None
+
+    return (
+        "CC="+CC,
+        "CXX="+CXX,
+        "CFLAGS="+CFLAGS,
+        "CXXFLAGS="+CFLAGS,
+        MDT
+    )
+
 def checkout_and_build_libmecab(basedir):
+    from os import environ
     from os.path import isdir, isfile, join as p_join
+    from sys import stderr
     from time import sleep
     from utils import get_parallel_jobs, run, chdir, mkdir_p, touch, symlink
 
@@ -42,6 +85,16 @@ def checkout_and_build_libmecab(basedir):
         run("git", "reset", "--hard", "FETCH_HEAD")
         chdir("mecab")
 
+    CC, CXX, CFLAGS, CXXFLAGS, MDT = compile_flags_for_platform()
+
+    stderr.write("+ compile_flags_for_platform\n"
+                 "Building MeCab with:\n       {}\n      {}\n   {}\n {}\n"
+                 .format(CC, CXX, CFLAGS, CXXFLAGS))
+
+    if MDT is not None:
+        stderr.write(" MACOSX_DEPLOYMENT_TARGET={}\n".format(MDT))
+        environ["MACOSX_DEPLOYMENT_TARGET"] = MDT
+
     if not isfile("mecab-config"):
         # Not yet configured.
         # Adjust time stamps to make sure that Make doesn't think it
@@ -54,17 +107,13 @@ def checkout_and_build_libmecab(basedir):
         # We build with the default charset set to UTF-8, but we don't
         # disable support for EUC-JP or Shift-JIS.
         run("./configure", "--enable-static", "--disable-shared",
-            "--with-charset=utf8")
+            "--with-charset=utf8", CC, CXX)
 
-    # Override CFLAGS and CXXFLAGS to produce position-independent code,
-    # even though we're only building a static library, because it will
-    # be linked into a shared object (the Python extension module).
     # Only build the actual library, not the utilities.
     chdir("src")
-    run("make", "-j{}".format(get_parallel_jobs()),
-        "CFLAGS=-g -O2 -fPIC",
-        "CXXFLAGS=-g -O2 -fPIC",
-        "libmecab.la")
+
+    run("make", "-j{}".format(get_parallel_jobs()), "libmecab.la",
+        CC, CXX, CFLAGS, CXXFLAGS)
 
     # Bypass libtool.
     if not isfile("libmecab.a"):

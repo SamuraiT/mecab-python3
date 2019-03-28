@@ -85,6 +85,23 @@ def cibuildwheel_ubuntu_prep_dictionary():
     # dicdir may be a symlink, force resolution
     run("cp", "-a", dicdir+"/.", "build/dic")
 
+def cibuildwheel_osx_install_buildreqs():
+    # don't waste time on "cleanup"
+    os.environ.pop("HOMEBREW_INSTALL_CLEANUP", None)
+    os.environ["HOMEBREW_NO_INSTALL_CLEANUP"] = "yes"
+
+    run("brew", "update")
+    run("brew", "--version")
+    run("brew", "install", "swig", "mecab-ipadic")
+    run("pip3", "install", "virtualenv")
+
+def cibuildwheel_osx_prep_dictionary():
+    mecab_ipadic_prefix = run_output("brew", "--prefix", "mecab-ipadic")
+    dicdir = os.path.join(mecab_ipadic_prefix, "lib/mecab/dic/ipadic")
+
+    # dicdir may be a symlink, force resolution
+    run("cp", "-a", dicdir+"/.", "build/dic")
+
 def cibuildwheel_build(MECAB, TRAVIS_OS):
 
     if MECAB != "bundled":
@@ -102,6 +119,11 @@ def cibuildwheel_build(MECAB, TRAVIS_OS):
         cibuildwheel_ubuntu_prep_swig()
         cibuildwheel_ubuntu_prep_dictionary()
 
+    elif TRAVIS_OS == "osx":
+        mkdir_p("build")
+        cibuildwheel_osx_install_buildreqs()
+        cibuildwheel_osx_prep_dictionary()
+
     else:
         sys.stderr.write("Operating system {!r} not yet supported by "
                          "cibuildwheel mode\n"
@@ -114,6 +136,7 @@ def cibuildwheel_build(MECAB, TRAVIS_OS):
     run("python3", "--version")
     run("virtualenv", "-p", "python3", "build/venv")
     activate_venv("build/venv")
+
     run("pip", "install", "cibuildwheel")
 
     # environment variables to control cibuildwheel

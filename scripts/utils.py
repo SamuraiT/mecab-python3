@@ -144,6 +144,9 @@ def activate_venv(venv_dir):
     )
     os.environ.pop("PYTHONHOME", None)
 
+    # https://bugs.python.org/issue22490
+    os.environ.pop("__PYVENV_LAUNCHER__", None)
+
     log_cmd(["activate_venv", venv_dir])
 
 def chdir(dest):
