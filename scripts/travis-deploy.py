@@ -9,7 +9,7 @@ from utils import run, activate_venv
 def do_deployment(tag, os):
     # Check whether there is anything to deploy.
     # We expect built wheels in the "wheelhouse" directory.
-    wheels = glob.glob("wheelhouse/*-{}-*.whl".format(tag))
+    wheels = glob("wheelhouse/*-{}-*.whl".format(tag))
     if not wheels:
         stderr.write("No wheels to deploy for tag '{}'??\n".format(tag))
         run("ls", "-l", "wheelhouse")
@@ -22,7 +22,7 @@ def do_deployment(tag, os):
     # cibuildwheel does not do this for us.
     if os == "linux":
         run("python", "setup.py", "sdist")
-        sdists = glob.glob("dist/*-{}.tar.gz".format(tag))
+        sdists = glob("dist/*-{}.tar.gz".format(tag))
         if sdists:
             run("twine", "check", *sdists)
             wheels.extend(sdists)
@@ -71,7 +71,7 @@ def main():
         and twine_user and twine_password and twine_repo):
         do_deployment(travis_tag, travis_os)
     else:
-        stderr.write("No deployment for this build."
+        stderr.write("No deployment for this build.\n")
 
 if __name__ == "__main__":
     main()
