@@ -5,14 +5,27 @@ matrix:
     - os: linux
       dist: xenial
       env: DRIVER=tox MECAB=system
-    - os: linux
-      dist: xenial
-      env: DRIVER=tox MECAB=bundled
+    # - os: linux
+    #   dist: xenial
+    #   env: DRIVER=tox MECAB=bundled
     - os: linux
       dist: xenial
       services: docker
       env: DRIVER=cibuildwheel MECAB=bundled
-    - os: osx
-      env: DRIVER=cibuildwheel MECAB=bundled
+    # - os: osx
+    #   env: DRIVER=cibuildwheel MECAB=bundled
 
 script: exec python3 ./scripts/travis-script.py
+
+deploy:
+  on:
+    tags: true
+    branch: deployment-test
+    condition: $DRIVER = cibuildwheel
+  skip_cleanup: true
+  provider: pypi
+  server: https://test.pypi.org/
+  distributions: "sdist bdist_wheel"
+  user: zackw
+  password:
+    secure: "JjimABg32+QTX46VLd0KcveM104uWR13ohsqYwKjzOCCaOwzQ8xLI0lz36KQq00SQRkdW65ddsBjWHBK6sURctnE+9YXDAJ2C2Pmb3BGXNuco+TNciFAZBnv4RsbQoq8Uuq0GQeatXNjv9FhYJLxyzKStYoDsF9I+psZnsO5G4L/vyI6y0yEA6lFR6yNoNH2vXD620bKjo/0uyTz26BvIelYLQK7tdLJKEQw2sc5HDtol7COboHuR3MpnBWlBNw2J/HC4SrL3Ihv8jBuE4z6cbv4Id+tZaEd30pMaXSiClFietCyE2e07wRfqehAohQdIXcwHyRbhN1pqDYMiBgircvFOfLtNAdlvie8zagGzDs48pARrKIxdsOlLVD6dsTL9w1aCvNABa776wR4D7AOPdhT/lD5XdX2hoGD02MHx6Gu4zZsfhg3eR4xn5CDGBfBJL9DkvTJxy5050tC7EDb5jg2/4/sUEaxi0IULHL9EZrZ8Mq+C+mcAXH6D6x7D+kTdpHoQ4Jy0FG/kh++Ydw8sWmroLOb6LITiVJb0Be3F81i8QyAC0H5ixOiMWL0nZJh0yc2ygOdK6heAYQxS0rdSxF2bNGYv4Y282V6A45IybWBeAyFZ728Dh4rK7rMVNUCmoMCaD3CYAwEnGYFT2ezJ85FRb88v+obqXrZPab54Y0="

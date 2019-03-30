@@ -200,7 +200,7 @@ class build_py(_build_py):
             yield data
 
 setup(name = "mecab-python3",
-    version = "0.996.2",
+    version = "0.996.2rc1.dev1",
     description = "python wrapper for mecab: Morphological Analysis engine",
     long_description = read_file("README.md"),
     long_description_content_type = "text/markdown",
