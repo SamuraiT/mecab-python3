@@ -5,14 +5,24 @@ matrix:
     - os: linux
       dist: xenial
       env: DRIVER=tox MECAB=system
-    - os: linux
-      dist: xenial
-      env: DRIVER=tox MECAB=bundled
+    # - os: linux
+    #   dist: xenial
+    #   env: DRIVER=tox MECAB=bundled
     - os: linux
       dist: xenial
       services: docker
       env: DRIVER=cibuildwheel MECAB=bundled
-    - os: osx
-      env: DRIVER=cibuildwheel MECAB=bundled
+    # - os: osx
+    #   env: DRIVER=cibuildwheel MECAB=bundled
 
-script: exec python3 ./scripts/travis-script.py
+script:
+- python3 ./scripts/travis-build.py
+- python3 ./scripts/travis-deploy.py
+
+# Deployment-related environment variables
+env:
+  global:
+    - TWINE_USERNAME=zackw
+    - TWINE_REPOSITORY_URL=https://test.pypi.org/legacy/
+    # TWINE_PASSWORD=[...]
+    - secure: mn5Xhhh4wDVHAMbbWRBtAp1ZMyLdNOlEJKbU5OczOASL/Rx07f91dcBfNpiQjnAKTPAVOaGAvLW2MakfLmvoa1fUV4kFltFKySgRkFxyYVUMftJOAF5Eo3mVuETjiv71tXeIvesd8vYwgX+l6PQAHT6bvheoM36WhEJNQAK43/8cEO6qTn3G9tQQkaICsbVEqMgWV+P9UxoQb664CpwLjigMObKcTIENgyuCMLmJv4xligIu2OIze/7qaiZfMLfPv5nvsPJh5mQnpA9WQljRYGnx56SViYODO6zHibbQVVmp6rYXOMqdiuHWXy+o9kSgb8EKZEamdkKRrDn1GRemMqxr7lWkj9wubj0sseV9iytW9jWmc7OpjL/bomuU/UL+fM5C5viioXuBKmdDi5Q8Ramwx+9S0Xw07miKa94JCV+q4fFl0Ky9j+4595NvasTEqYrOmNjzGeOZT5bMspwiKZkX3PrDihEjv0qMiuzhJ62ZiQInsWg3gfzrPRrrZo0cdRJmHzXqNEdwWmMpfBz/8sKtIG4P+qFuqp7kt/g0i5Cq37CTmt/PpaZWy00UTJNY5C3d9+LopLepAFV3pSeIQ8TgKO5Awz4GUa5Ycct5YCGInqg+eKOQx9LM8JySwEpzLFCfbyaHNnRxB6chzWk9KMK/iSaaY2hyNQSHeQox544=
