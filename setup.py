@@ -200,7 +200,6 @@ class build_py(_build_py):
             yield data
 
 setup(name = "mecab-python3",
-    version = "0.996.2",
     description = "python wrapper for mecab: Morphological Analysis engine",
     long_description = read_file("README.md"),
     long_description_content_type = "text/markdown",
@@ -208,6 +207,7 @@ setup(name = "mecab-python3",
     maintainer_email = "t.yasukawa01@gmail.com",
     url = "https://github.com/SamuraiT/mecab-python3",
     license = "BSD",
+    use_scm_version=True,
     cmdclass = {
         "build_ext": build_ext,
         "build_py": build_py
@@ -217,6 +217,7 @@ setup(name = "mecab-python3",
     ext_modules = [
         Extension("MeCab._MeCab", ["src/MeCab/MeCab.i"])
     ],
+    setup_requires=["setuptools_scm"],
     classifiers = [
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
