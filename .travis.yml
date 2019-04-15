@@ -15,9 +15,13 @@ matrix:
     - os: osx
       env: DRIVER=cibuildwheel MECAB=bundled
 
-script:
-- python3 ./scripts/travis-build.py
-- python3 ./scripts/travis-deploy.py
+# Only run the deployment step if the build step succeeded.
+# This prevents partial uploads in case the build crashed after
+# building some but not all of the wheels.
+script: |
+  set -ex
+  python3 ./scripts/travis-build.py
+  python3 ./scripts/travis-deploy.py
 
 # Deployment-related environment variables
 env:
