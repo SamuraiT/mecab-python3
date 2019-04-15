@@ -5,3 +5,5 @@ include tox.ini
 include src/MeCab/mecabrc.in
 include scripts/*.py
 include test/*.py
+recursive-include .eggs *
+recursive-exclude .eggs *.pyc *.pyo *.so *.dll
