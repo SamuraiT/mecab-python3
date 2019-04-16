@@ -1,5 +1,6 @@
 #! /usr/bin/env python3
 
+import sys
 from glob import glob
 from os import environ
 from sys import stderr
