@@ -84,6 +84,9 @@ def _mecabrc_for_bundled_dictionary():
         yield
 
 
+global _Model, _Tagger  # declared in _MeCab
+
+
 class Tagger(_Tagger):
     def __init__(self, *args):
         with _mecabrc_for_bundled_dictionary():
