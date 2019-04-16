@@ -73,7 +73,7 @@ def run(*argv):
                 sh_quote(argv[0]), e.returncode))
         else:
             sys.stderr.write("* {}: signal {}\n".format(
-                sh_quote(argv[0]), -status))
+                sh_quote(argv[0]), -e.returncode))
         sys.exit(1)
 
     except OSError as e:
@@ -103,7 +103,7 @@ def run_output(*argv):
                 sh_quote(argv[0]), e.returncode))
         else:
             sys.stderr.write("*\n* {}: signal {}\n".format(
-                sh_quote(argv[0]), -status))
+                sh_quote(argv[0]), -e.returncode))
         sys.exit(1)
 
     except OSError as e:
@@ -164,12 +164,12 @@ def mkdir_p(dir):
     try:
         os.makedirs(dir)
     except OSError as e:
-        if not hasattr(e, 'filename') or e.filename == dir:
-            sys.stderr.write("* mkdir: {}: {}\n".format(
-                sh_quote(dest), e.strerror))
-        else:
+        if hasattr(e, 'filename'):
             sys.stderr.write("* mkdir: {}: {}\n".format(
                 sh_quote(e.filename), e.strerror))
+        else:
+            sys.stderr.write("* mkdir: {}: {}\n".format(
+                sh_quote(dir), e.strerror))
         sys.exit(1)
 
 def setenv(key, value):

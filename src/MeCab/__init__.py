@@ -19,17 +19,18 @@ import tempfile
 #
 
 def _reexport_filtered(thismod, submod):
-    renames = {
-        "Tagger": "_Tagger",
-        "Model": "_Model"
+    skip_syms = {
+        # implementation details
+        "Model_version", "Tagger_version", "SWIG_PyInstanceMethod_New",
+
+        # classes exported via a wrapper
+        "Tagger", "Model",
     }
     selected = []
     for sym in dir(submod):
-        if sym.startswith("MECAB_") or "_" not in sym:
-            rsym = renames.get(sym, sym)
-            if rsym[0] != '_':
-                selected.append(rsym)
-            setattr(thismod, rsym, getattr(submod, sym))
+        if sym.startswith("MECAB_") or (sym[0] != '_' and sym not in skip_syms):
+            selected.append(sym)
+            setattr(thismod, sym, getattr(submod, sym))
     return selected
 
 __all__ = _reexport_filtered(__import__(__name__), _MeCab)
@@ -84,17 +85,17 @@ def _mecabrc_for_bundled_dictionary():
         yield
 
 
-class Tagger(_Tagger):
+class Tagger(_MeCab.Tagger):
     def __init__(self, *args):
         with _mecabrc_for_bundled_dictionary():
-            _Tagger.__init__(self, *args)
+            super(Tagger, self).__init__(*args)
 
 __all__.append("Tagger")
 
 
-class Model(_Model):
+class Model(_MeCab.Model):
     def __init__(self, *args):
         with _mecabrc_for_bundled_dictionary():
-            _Model.__init__(self, *args)
+            super(Model, self).__init__(*args)
 
 __all__.append("Model")

@@ -2,7 +2,7 @@
 
 from glob import glob
 from os import environ
-from sys import stderr
+from sys import stderr, exit
 
 from utils import run, activate_venv
 
@@ -13,7 +13,7 @@ def do_deployment(tag, os):
     if not wheels:
         stderr.write("No wheels to deploy for tag '{}'??\n".format(tag))
         run("ls", "-l", "wheelhouse")
-        sys.exit(1)
+        exit(1)
 
     activate_venv("build/venv")
     run("pip", "install", "twine")
@@ -29,7 +29,7 @@ def do_deployment(tag, os):
         else:
             stderr.write("No sdist to deploy for tag '{}'??\n".format(tag))
             run("ls", "-l", "dist")
-            sys.exit(1)
+            exit(1)
 
     # Twine will pick up the username, password, and repo URL from the
     # environment.
