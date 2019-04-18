@@ -15,6 +15,7 @@ from os import path, getcwd
 from utils import run, chdir, get_parallel_jobs
 from build_requirements import SWIG
 
+
 def main():
     chdir(path.dirname(path.dirname(path.abspath(__file__))))
     if not path.isfile("setup.py") or not path.isdir("build"):
@@ -41,6 +42,7 @@ def main():
 
     run("make", "-j{}".format(get_parallel_jobs()))
     run("make", "install")
+
 
 if __name__ == "__main__":
     main()

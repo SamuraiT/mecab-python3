@@ -19,6 +19,7 @@ LIBMECAB_REV = "3a07c4eefaffb4e7a0690a7f4e5e0263d3ddb8a3"
 
 LIBMECAB_DIR = "build/libmecab"
 
+
 # The libmecab we build will be statically linked into the Python
 # extension module, so we need to match the compilation flags used
 # for module code.  Get distutils to tell us what those are.
@@ -35,10 +36,8 @@ def compile_flags_for_platform():
             # Discard warnings flags, we are building code that hasn't
             # been held to anything like the standard required by the
             # Python devteam.
-            if flag[:2] in ("-I", "-W"): continue
-
-            rv.append(flag)
-
+            if flag[:2] not in ("-I", "-W"):
+                rv.append(flag)
         return rv
 
     ccdata = new_compiler()
@@ -59,6 +58,7 @@ def compile_flags_for_platform():
         "CXXFLAGS="+CFLAGS,
         MDT
     )
+
 
 def checkout_and_build_libmecab(basedir):
     from os import environ
@@ -119,6 +119,7 @@ def checkout_and_build_libmecab(basedir):
     if not isfile("libmecab.a"):
         symlink(".libs/libmecab.a", "libmecab.a")
 
+
 def main():
     from argparse import ArgumentParser
     ap = ArgumentParser(description=__doc__)
@@ -127,6 +128,7 @@ def main():
                         LIBMECAB_DIR))
     args = ap.parse_args()
     checkout_and_build_libmecab(args.basedir)
+
 
 if __name__ == "__main__":
     main()

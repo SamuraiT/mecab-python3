@@ -13,6 +13,7 @@ from build_requirements import SWIG
 # installing many Pythons into it is straightforward
 #
 
+
 def tox_ubuntu_install_buildreqs(MECAB):
     run("sudo", "add-apt-repository", "-y", "ppa:deadsnakes/ppa")
     run("sudo", "apt-get", "-y", "update")
@@ -26,6 +27,7 @@ def tox_ubuntu_install_buildreqs(MECAB):
         packages.append("libmecab-dev")
 
     run("sudo", "apt-get", "-y", "install", *packages)
+
 
 def tox_build(MECAB, TRAVIS_OS):
 
@@ -56,13 +58,16 @@ def tox_build(MECAB, TRAVIS_OS):
 # Driver: cibuildwheel
 #
 
+
 def cibuildwheel_ubuntu_install_buildreqs():
     run("sudo", "apt-get", "-y", "update")
     run("sudo", "apt-get", "-y", "install",
         "mecab-ipadic-utf8", "virtualenv")
 
+
 def cibuildwheel_ubuntu_prep_swig():
     SWIG.retrieve("build")
+
 
 def cibuildwheel_ubuntu_prep_dictionary():
     try:
@@ -86,6 +91,7 @@ def cibuildwheel_ubuntu_prep_dictionary():
     # dicdir may be a symlink, force resolution
     run("cp", "-a", dicdir+"/.", "build/dic")
 
+
 def cibuildwheel_osx_install_buildreqs():
     # don't waste time on "cleanup"
     os.environ.pop("HOMEBREW_INSTALL_CLEANUP", None)
@@ -96,12 +102,14 @@ def cibuildwheel_osx_install_buildreqs():
     run("brew", "install", "swig", "mecab-ipadic")
     run("pip3", "install", "virtualenv")
 
+
 def cibuildwheel_osx_prep_dictionary():
     mecab_ipadic_prefix = run_output("brew", "--prefix", "mecab-ipadic")
     dicdir = os.path.join(mecab_ipadic_prefix, "lib/mecab/dic/ipadic")
 
     # dicdir may be a symlink, force resolution
     run("cp", "-a", dicdir+"/.", "build/dic")
+
 
 def cibuildwheel_build(MECAB, TRAVIS_OS):
 
@@ -143,13 +151,14 @@ def cibuildwheel_build(MECAB, TRAVIS_OS):
 
     # environment variables to control cibuildwheel
     S = setenv
-    S("CIBW_ENVIRONMENT",     "MECAB_DICDIR=build/dic BUNDLE_LIBMECAB=true")
-    S("CIBW_BEFORE_BUILD",    "{project}/scripts/cibw-prepare-"+TRAVIS_OS+".py")
-    S("CIBW_TEST_COMMAND",    "pytest {project}/test/")
-    S("CIBW_TEST_REQUIRES",   "pytest")
+    S("CIBW_ENVIRONMENT", "MECAB_DICDIR=build/dic BUNDLE_LIBMECAB=true")
+    S("CIBW_BEFORE_BUILD", "{project}/scripts/cibw-prepare-"+TRAVIS_OS+".py")
+    S("CIBW_TEST_COMMAND", "pytest {project}/test/")
+    S("CIBW_TEST_REQUIRES", "pytest")
     S("CIBW_BUILD_VERBOSITY", "3")
 
     run("cibuildwheel", "--output-dir", "wheelhouse")
+
 
 def main():
     if not os.path.isfile("setup.py"):
@@ -177,6 +186,7 @@ def main():
     else:
         sys.stderr.write("Unrecognized DRIVER value: {}\n".format(DRIVER))
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

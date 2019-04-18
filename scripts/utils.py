@@ -9,7 +9,6 @@ import os
 import subprocess
 import sys
 import tempfile
-import time
 
 __all__ = [
     "get_parallel_jobs",
@@ -20,10 +19,10 @@ __all__ = [
 
 OUTPUT_ENCODING = locale.getpreferredencoding(True)
 
+
 #
 # Intuit the available parallelism
 #
-_parallel_jobs = None
 def get_parallel_jobs():
     def _get_parallel_jobs():
         try:
@@ -45,22 +44,26 @@ def get_parallel_jobs():
         return 1
 
     global _parallel_jobs
-    if _parallel_jobs is None:
-        _parallel_jobs = _get_parallel_jobs()
-    return _parallel_jobs
+    try:
+        return _parallel_jobs
+    except NameError:
+        _parallel_jobs = pj = _get_parallel_jobs()
+        return pj
+
 
 #
 # Running subprocesses
 #
-
 try:
     from shlex import quote as sh_quote
 except ImportError:
     from pipes import quote as sh_quote
 
+
 def log_cmd(argv):
     sys.stderr.write("+ " + " ".join(sh_quote(arg) for arg in argv) + "\n")
     sys.stderr.flush()
+
 
 def run(*argv):
     log_cmd(argv)
@@ -83,6 +86,7 @@ def run(*argv):
     except Exception as e:
         sys.stderr.write("* {}: {}\n".format(sh_quote(argv[0]), str(e)))
         sys.exit(1)
+
 
 def run_output(*argv):
     sys.stderr.write("+ $(" + " ".join(sh_quote(arg) for arg in argv) + ") = ")
@@ -121,6 +125,7 @@ def run_output(*argv):
 # a subprocess.
 #
 
+
 def activate_venv(venv_dir):
     # This does approximately what ". ${venv_dir}/bin/activate" would do
     # if this were a shell script.  The major difference is that we make
@@ -138,9 +143,8 @@ def activate_venv(venv_dir):
 
     os.environ["VIRTUAL_ENV"] = venv_dir
     os.environ["PATH"] = (
-        os.path.join(venv_dir, bin_dir) +
-        os.pathsep +
-        os.environ["PATH"]
+        os.path.join(venv_dir, bin_dir)
+        + os.pathsep + os.environ["PATH"]
     )
     os.environ.pop("PYTHONHOME", None)
 
@@ -148,6 +152,7 @@ def activate_venv(venv_dir):
     os.environ.pop("__PYVENV_LAUNCHER__", None)
 
     log_cmd(["activate_venv", venv_dir])
+
 
 def chdir(dest):
     log_cmd(["cd", dest])
@@ -157,10 +162,12 @@ def chdir(dest):
         sys.stderr.write("* cd: {}: {}\n".format(sh_quote(dest), e.strerror))
         sys.exit(1)
 
+
 def mkdir_p(dir):
     log_cmd(["mkdir", "-p", dir])
     # In 2.7, os.makedirs does not have the exist_ok parameter.
-    if os.path.isdir(dir): return
+    if os.path.isdir(dir):
+        return
     try:
         os.makedirs(dir)
     except OSError as e:
@@ -172,9 +179,11 @@ def mkdir_p(dir):
                 sh_quote(dir), e.strerror))
         sys.exit(1)
 
+
 def setenv(key, value):
     log_cmd(["export", "{}={}".format(key, value)])
     os.environ[key] = value
+
 
 def symlink(src, dest):
     log_cmd(["ln", "-s", src, dest])
@@ -189,6 +198,7 @@ def symlink(src, dest):
                 sh_quote(dest), e.strerror))
         sys.exit(1)
 
+
 def touch(path):
     log_cmd(["touch", path])
     try:
@@ -201,6 +211,7 @@ def touch(path):
 #
 # Downloading tarballs
 #
+
 
 class Downloadable(object):
     def __init__(self, name, url, hash, unpacked_name=None):
@@ -220,7 +231,8 @@ class Downloadable(object):
             h = hashlib.sha256()
             while True:
                 blk = os.read(fd, 8192)
-                if not blk: break
+                if not blk:
+                    break
                 h.update(blk)
 
             digest = h.hexdigest()
@@ -236,7 +248,7 @@ class Downloadable(object):
             os.rename(tfname, os.path.join(destdir, self.name))
             return
 
-        except:
+        except:  # noqa: E722: bare except used intentionally, with reraise
             if fd is not None:
                 os.close(fd)
             if tfname is not None:

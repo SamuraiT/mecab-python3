@@ -6,6 +6,7 @@ from sys import stderr, exit
 
 from utils import run, activate_venv
 
+
 def do_deployment(tag, os):
     # Check whether there is anything to deploy.
     # We expect built wheels in the "wheelhouse" directory.
@@ -35,6 +36,7 @@ def do_deployment(tag, os):
     # environment.
     run("twine", "upload", "--verbose", "--disable-progress-bar", *wheels)
 
+
 def main():
     # Only run deployment if we're a tagged release, not a pull
     # request, used cibuildwheel to do the builds, and all necessary
@@ -58,20 +60,22 @@ def main():
                  "TWINE_PASSWORD       = {}\n"
                  "TWINE_REPOSITORY_URL = {!r}\n"
                  "\n".format(
-                         build_driver, travis_os,
-                         travis_branch, travis_tag, travis_pr,
-                         twine_user, "[REDACTED]" if twine_password else "''",
-                         twine_repo
-                     ))
+                     build_driver, travis_os,
+                     travis_branch, travis_tag, travis_pr,
+                     twine_user, "[REDACTED]" if twine_password else "''",
+                     twine_repo
+                 ))
 
-    if (build_driver == "cibuildwheel"
-        and travis_tag
-        and travis_tag == travis_branch
-        and travis_pr in ("", "false")
-        and twine_user and twine_password and twine_repo):
-        do_deployment(travis_tag, travis_os)
-    else:
+    if not (build_driver == "cibuildwheel"
+            and travis_tag
+            and travis_tag == travis_branch
+            and travis_pr in ("", "false")
+            and twine_user and twine_password and twine_repo):
         stderr.write("No deployment for this build.\n")
+        exit(0)
+
+    do_deployment(travis_tag, travis_os)
+
 
 if __name__ == "__main__":
     main()

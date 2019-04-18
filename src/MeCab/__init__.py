@@ -13,13 +13,13 @@ import contextlib
 import os
 import tempfile
 
+
 #
 # Most of the public symbols come directly from the internal _MeCab
 # module.
 #
-
 def _reexport_filtered(thismod, submod):
-    skip_syms = {
+    skips = {
         # implementation details
         "Model_version", "Tagger_version", "SWIG_PyInstanceMethod_New",
 
@@ -28,13 +28,15 @@ def _reexport_filtered(thismod, submod):
     }
     selected = []
     for sym in dir(submod):
-        if sym.startswith("MECAB_") or (sym[0] != '_' and sym not in skip_syms):
+        if sym.startswith("MECAB_") or (sym[0] != '_' and sym not in skips):
             selected.append(sym)
             setattr(thismod, sym, getattr(submod, sym))
     return selected
 
+
 __all__ = _reexport_filtered(__import__(__name__), _MeCab)
 del _reexport_filtered
+
 
 #
 # Version information
@@ -43,22 +45,26 @@ del _reexport_filtered
 VERSION = _MeCab.Tagger_version()
 __all__.append("VERSION")
 
+
 #
 # Detect whether or not libmecab and a dictionary have been bundled.
 # If they have, pass that information down to the library when
 # initializing Model and Tagger objects.
 #
-BUNDLED_DICDIR = None
-_BUNDLED_MECABTMPL = None
 def _init_bundled_info():
+    global BUNDLED_DICDIR
+    global _BUNDLED_MECABTMPL
     pkgdatadir = os.path.dirname(__file__)
     dicdir = os.path.join(pkgdatadir, "dic")
     mecabtmpl = os.path.join(pkgdatadir, "mecabrc.in")
     if os.path.isdir(dicdir) and os.path.isfile(mecabtmpl):
-        global BUNDLED_DICDIR
-        global _BUNDLED_MECABTMPL
         BUNDLED_DICDIR = os.path.abspath(dicdir)
         _BUNDLED_MECABTMPL = os.path.abspath(mecabtmpl)
+    else:
+        BUNDLED_DICDIR = None
+        _BUNDLED_MECABTMPL = None
+
+
 _init_bundled_info()
 del _init_bundled_info
 __all__.append("BUNDLED_DICDIR")
@@ -90,12 +96,12 @@ class Tagger(_MeCab.Tagger):
         with _mecabrc_for_bundled_dictionary():
             super(Tagger, self).__init__(*args)
 
-__all__.append("Tagger")
-
 
 class Model(_MeCab.Model):
     def __init__(self, *args):
         with _mecabrc_for_bundled_dictionary():
             super(Model, self).__init__(*args)
 
+
 __all__.append("Model")
+__all__.append("Tagger")

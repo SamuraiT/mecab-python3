@@ -17,6 +17,7 @@ SENTENCE = "太郎はこの本を二郎を見た女性に渡した。"
 # I suspect this is a bug somewhere within libmecab itself.
 TAGGER = MeCab.Tagger(os.environ.get("MECAB_TAGGER_ARGS", ""))
 
+
 class TestTagger(unittest.TestCase):
     def setUp(self):
         self.tagger = TAGGER
@@ -102,6 +103,7 @@ class TestTagger(unittest.TestCase):
         #         print("E[%d] %s\t%s" % (i, e.surface, e.feature))
         #         e = e.bnext
         # print("EOS");
+
 
 if __name__ == "__main__":
     unittest.main()
