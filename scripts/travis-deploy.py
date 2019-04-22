@@ -70,7 +70,7 @@ def main():
             and travis_tag
             and travis_tag == travis_branch
             and travis_pr in ("", "false")
-            and twine_user and twine_password and twine_repo):
+            and twine_user and twine_password):
         stderr.write("No deployment for this build.\n")
         exit(0)
 
