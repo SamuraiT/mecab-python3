@@ -25,6 +25,33 @@ def read_file(filename):
     return raw.decode("utf-8")
 
 
+# Discard unwanted top matter from README.md for reuse as the long
+# description.  Specifically, we discard everything up to and
+# including the first Markdown header line (begins with a '#') and
+# any blank lines immediately after that header.
+def read_and_trim_readme():
+    readme = read_file("README.md").splitlines()
+    found_first_header = False
+    start = None
+    for i, line in enumerate(readme):
+        # Both leading and trailing horizontal whitespace may be
+        # significant in Markdown, so we don't strip any.
+        if found_first_header:
+            if line:
+                # This is the first non-blank line after the
+                # first header, and therefore the first line
+                # we want to preserve.
+                start = i
+                break
+        elif line and line[0] == '#':
+            found_first_header = True
+    else:
+        sys.stderr.write("Failed to parse README.md\n")
+        sys.exit(1)
+
+    return "\n".join(readme[start:])
+
+
 # We can build using either a local bundled copy of libmecab, or a
 # system-provided one.  Delay deciding which of these to do until
 # `build_ext` is invoked, because if `build_ext` isn't going to be
@@ -208,8 +235,9 @@ class build_py(_build_py):
 
 
 setup(name = "mecab-python3",
-      description = "python wrapper for mecab: Morphological Analysis engine",
-      long_description = read_file("README.md"),
+      description =
+      "Python wrapper for the MeCab morphological analyzer for Japanese",
+      long_description = read_and_trim_readme(),
       long_description_content_type = "text/markdown",
       maintainer = "Tatsuro Yasukawa",
       maintainer_email = "t.yasukawa01@gmail.com",
@@ -225,14 +253,15 @@ setup(name = "mecab-python3",
       ext_modules = [
           Extension("MeCab._MeCab", ["src/MeCab/MeCab.i"])
       ],
-      setup_requires=["setuptools_scm"],
+      setup_requires = ["setuptools_scm"],
       classifiers = [
-          "Programming Language :: Python",
+          "Development Status :: 6 - Mature",
+          "Programming Language :: Python :: 2",
           "Programming Language :: Python :: 3",
-          "License :: OSI Approved :: BSD License",
-          "Environment :: MacOS X",
           "Intended Audience :: Developers",
           "Intended Audience :: Science/Research",
-          "Topic :: Text Processing :: Linguistic",
+          "Natural Language :: Japanese",
           "Topic :: Software Development :: Libraries :: Python Modules",
+          "Topic :: Text Processing :: Linguistic",
+          "License :: OSI Approved :: BSD License",
       ])
