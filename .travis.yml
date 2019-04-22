@@ -1,19 +1,23 @@
+# This is a Python package, but we don't use Travis's Python
+# environment to build it, because of the complicated relationship it
+# has with SWIG and the C++ MeCab library.  Instead we use tox,
+# cibuildwheel, and a bunch of custom build scripts.
 language: generic
 
 matrix:
   include:
-    - os: linux
-      dist: xenial
-      env: DRIVER=tox MECAB=system
-    - os: linux
-      dist: xenial
-      env: DRIVER=tox MECAB=bundled
-    - os: linux
-      dist: xenial
-      services: docker
-      env: DRIVER=cibuildwheel MECAB=bundled
-    - os: osx
-      env: DRIVER=cibuildwheel MECAB=bundled
+  - os: linux
+    dist: xenial
+    env: DRIVER=tox MECAB=system
+  - os: linux
+    dist: xenial
+    env: DRIVER=tox MECAB=bundled
+  - os: linux
+    dist: xenial
+    services: docker
+    env: DRIVER=cibuildwheel MECAB=bundled
+  - os: osx
+    env: DRIVER=cibuildwheel MECAB=bundled
 
 # Only run the deployment step if the build step succeeded.
 # This prevents partial uploads in case the build crashed after
@@ -26,7 +30,6 @@ script: |
 # Deployment-related environment variables
 env:
   global:
-    - TWINE_USERNAME=zackw
-    - TWINE_REPOSITORY_URL=https://test.pypi.org/legacy/
-    # TWINE_PASSWORD=[...]
-    - secure: mn5Xhhh4wDVHAMbbWRBtAp1ZMyLdNOlEJKbU5OczOASL/Rx07f91dcBfNpiQjnAKTPAVOaGAvLW2MakfLmvoa1fUV4kFltFKySgRkFxyYVUMftJOAF5Eo3mVuETjiv71tXeIvesd8vYwgX+l6PQAHT6bvheoM36WhEJNQAK43/8cEO6qTn3G9tQQkaICsbVEqMgWV+P9UxoQb664CpwLjigMObKcTIENgyuCMLmJv4xligIu2OIze/7qaiZfMLfPv5nvsPJh5mQnpA9WQljRYGnx56SViYODO6zHibbQVVmp6rYXOMqdiuHWXy+o9kSgb8EKZEamdkKRrDn1GRemMqxr7lWkj9wubj0sseV9iytW9jWmc7OpjL/bomuU/UL+fM5C5viioXuBKmdDi5Q8Ramwx+9S0Xw07miKa94JCV+q4fFl0Ky9j+4595NvasTEqYrOmNjzGeOZT5bMspwiKZkX3PrDihEjv0qMiuzhJ62ZiQInsWg3gfzrPRrrZo0cdRJmHzXqNEdwWmMpfBz/8sKtIG4P+qFuqp7kt/g0i5Cq37CTmt/PpaZWy00UTJNY5C3d9+LopLepAFV3pSeIQ8TgKO5Awz4GUa5Ycct5YCGInqg+eKOQx9LM8JySwEpzLFCfbyaHNnRxB6chzWk9KMK/iSaaY2hyNQSHeQox544=
+  - TWINE_USERNAME=zackw
+  # TWINE_PASSWORD=[...]
+  - secure: A5jpEJtU/Dv0q4gbt+VM1e2YFgJZUGUTfxXW6JjYO2wQOrDD7KRa7hYv0VxCZLD/jUcKm7x64zveGu9BEXihgZ/l4qjLcmDaQR6pnfX37aCQaX291X3mhjcfj5JrDkSbpqr2ijXW1omNFM1sE8ODlUp5Iao8BFmbBVAfopX790khhKT8IA8f9J85zi/ky3aFqHsl0SlHeGf5EIkJEusBDTom7mDP3u9siK4I1QfnVJKXS1lYWwPAaxdtYqQS+9fFY3P+9kO4Xlk5PbQqvzB3rezJTB3NvtBqlz2/KK2TMI8vFChfWZ5fOcJvXJRUTIP3hoW4d1ybdrqw74pRIMHccVbzS3ZxJw4fyW50HvwC9dNaJEWF/NexhAbCU7SFGMoth/0lMGZwLEW6bzYSYxY/WgjAawhPrYQOvuWXgDazeZkwXEvuzGbNehU++FkkdNkU2mZA38dn1q1MjcAbZs04/SvKegthL6CdSIaKUeUpEjz23itWaxrT6ShWc+U05GRXEDzxcCWXUszhCXEP9YEkUYZ391vyuY2Ydfy9UJ2xpGMJ8ngf95eDZV5dK4FZzkOdaK9FTnC2VNy75U0pauRu0LURsRiioWnQ/1u3l2PuzPAkIdUr/cAgVltZkjYhjepAYODMfNlsiSPZr5pxfN47KnFZdE0tCzERuWL3MxDgajw=
