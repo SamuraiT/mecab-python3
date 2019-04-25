@@ -9,14 +9,26 @@ import unittest
 
 import MeCab
 
+
 # TODO: More test sentences.
 SENTENCE = "太郎はこの本を二郎を見た女性に渡した。"
+
+SENTENCES = (
+        ("すももももももももの内", "すもも も もも も もも の 内".split()),
+        ("吾輩は猫である。", "吾輩 は 猫 で ある 。".split()),
+        ("ははははは丈夫だ", "は は は は は 丈夫 だ".split()), # note this is wrong, but that's ipadic
+        ("カムパネルラが手をあげました。", "カムパネルラ が 手 を あげ まし た 。".split()),
+        ("コミックマーケットは同人誌を中心にしてすべての表現者を受け入れ、継続することを目的とした表現の可能性を拡げるための「場」である", 
+            "コミック マーケット は 同人 誌 を 中心 に し て すべて の 表現 者 を 受け入れ 、 継続 する こと を 目的 と し た 表現 の 可能 性 を 拡げる ため の 「 場 」 で ある".split())
+        )
 
 # BUG: If we instantiate a new tagger for each test case, then the
 # second and subsequent tagger instantiations will produce garbage.
 # I suspect this is a bug somewhere within libmecab itself.
 TAGGER = MeCab.Tagger(os.environ.get("MECAB_TAGGER_ARGS", ""))
 
+# check if we are using IPADIC and only test in that case
+USING_IPADIC = (TAGGER.parseToNode("日本").next.feature == "名詞,固有名詞,地域,国,*,*,日本,ニッポン,ニッポン")
 
 class TestTagger(unittest.TestCase):
     def setUp(self):
@@ -53,8 +65,14 @@ class TestTagger(unittest.TestCase):
     # for instance, detect a regression of
     # https://github.com/SamuraiT/mecab-python3/issues/19 .)
 
-    def test_parse(self):
-        parsed = self.tagger.parse(SENTENCE)
+    # XXX The above is not strictly true - "surface" does not include some
+    # kinds of whitespace. If your input is "hello how are you" there will be
+    # no white space in the surfaces. It seems the only way to tell if there
+    # was a space from the C api is to check if rlength is longer than length
+    # for a node, in which case there was a space before it.
+
+    def tokenize(self, sentence):
+        parsed = self.tagger.parse(sentence)
         nodes = []
         last = False
         for line in parsed.splitlines():
@@ -65,6 +83,10 @@ class TestTagger(unittest.TestCase):
             surface, feature = line.strip().split("\t", 1)
             nodes.append((surface, feature))
         self.assertTrue(last)
+        return nodes
+
+    def test_parse(self):
+        nodes = self.tokenize(SENTENCE)
         self.validateNodes(SENTENCE, nodes)
 
     def test_parseToNode(self):
@@ -74,6 +96,13 @@ class TestTagger(unittest.TestCase):
             nodes.append((m.surface, m.feature))
             m = m.next
         self.validateNodes(SENTENCE, nodes)
+
+    @unittest.skipIf(not USING_IPADIC, "Not using ipadic")
+    def test_tokenization(self):
+        for sentence, answer in SENTENCES:
+            tokens = [tok[0] for tok in self.tokenize(sentence)]
+            with self.subTest(sentence=sentence):
+                self.assertEqual(tokens, answer)
 
     def validateNodes(self, sentence, nodes):
         for surface, feature in nodes:
