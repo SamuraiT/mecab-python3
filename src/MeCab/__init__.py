@@ -85,8 +85,10 @@ def _mecabrc_for_bundled_dictionary():
             rc.flush()
 
             os.environ["MECABRC"] = rc.name
-            yield
-            del os.environ["MECABRC"]
+            try:
+                yield
+            finally:
+                del os.environ["MECABRC"]
     else:
         yield
 
