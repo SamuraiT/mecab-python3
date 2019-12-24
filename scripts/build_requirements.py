@@ -4,11 +4,14 @@
 
 from utils import Downloadable
 
-POOL_URL = "https://deb.debian.org/debian/pool/main"
+POOL_URL = "https://src.fedoraproject.org/lookaside/pkgs"
 
 SWIG = Downloadable(
-    name          = "swig-3.0.12.tar.gz",
-    unpacked_name = "swig-3.0.12",
-    url  = POOL_URL + "/s/swig/swig_3.0.12.orig.tar.gz",
-    hash = "7cf9f447ae7ed1c51722efc45e7f14418d15d7a1e143ac9f09a668999f4fc94d"
+    name          = "swig-4.0.1.tar.gz",
+    unpacked_name = "swig-4.0.1",
+    url = POOL_URL + "/swig/swig-4.0.1.tar.gz/sha512/"
+                     "595ef01cb83adfa960ceed9c325a9429192549e8d1e9aa3ab35a"
+                     "4301512a61d82e2e89a8c7939c2a5a0811254ea1832a443bd387"
+                     "e11459eb2b0bafc563ad1308/swig-4.0.1.tar.gz",
+    hash = "7a00b4d0d53ad97a14316135e2d702091cd5f193bb58bcfcd8bc59d41e7887a9"
 )

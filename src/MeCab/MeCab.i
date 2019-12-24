@@ -26,8 +26,8 @@
 %rename(DictionaryInfo) mecab_dictionary_info_t;
 %ignore    mecab_model_t;
 %ignore    mecab_lattice_t;
-%nodefault mecab_path_t;
-%nodefault mecab_node_t;
+%nodefaultctor mecab_path_t;
+%nodefaultctor mecab_node_t;
 
 %feature("notabstract") MeCab::Tagger;
 %feature("notabstract") MeCab::Lattice;
