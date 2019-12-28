@@ -2,6 +2,7 @@
 # environment to build it, because of the complicated relationship it
 # has with SWIG and the C++ MeCab library.  Instead we use tox,
 # cibuildwheel, and a bunch of custom build scripts.
+
 language: generic
 
 matrix:
