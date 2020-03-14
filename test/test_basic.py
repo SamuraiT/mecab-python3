@@ -39,7 +39,7 @@ USING_IPADIC = (
 )
 
 
-# unittest.TestCase.subTest is only available in python >=3.4, not 2.x
+# unittest.TestCase.subTest is only available in python >=3.5, not 2.x
 # provide a shim
 if hasattr(unittest.TestCase, 'subTest'):
     def sub_test(testcase, *args, **kwargs):

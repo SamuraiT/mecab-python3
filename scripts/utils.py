@@ -1,5 +1,5 @@
 # Utility routines used by the scripts in this directory.
-# These scripts need to work correctly with Python 2.7 and 3.4
+# These scripts need to work correctly with Python 2.7 and 3.5
 # as well as newer versions; in particular, subprocess.run cannot
 # be used, and we need fallbacks for shlex.quote and os.cpu_count.
 
