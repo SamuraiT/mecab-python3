@@ -7,7 +7,7 @@ from sys import stderr, exit
 from utils import run, activate_venv
 
 
-def do_deployment(tag, os):
+def do_deployment(tag, os, build_sdist=False):
     # Check whether there is anything to deploy.
     # We expect built wheels in the "wheelhouse" directory.
     wheels = glob("wheelhouse/*-{}-*.whl".format(tag))
@@ -19,9 +19,9 @@ def do_deployment(tag, os):
     activate_venv("build/venv")
     run("pip", "install", "twine")
 
-    # If this is the Linux build, also generate an sdist tarball;
+    # If this is the manylinux2010 build, also generate an sdist tarball;
     # cibuildwheel does not do this for us.
-    if os == "linux":
+    if build_sdist:
         run("python", "setup.py", "sdist")
         sdists = glob("dist/*-{}.tar.gz".format(tag))
         if sdists:
@@ -49,6 +49,7 @@ def main():
     twine_user     = environ.get("TWINE_USERNAME", "")
     twine_password = environ.get("TWINE_PASSWORD", "")
     twine_repo     = environ.get("TWINE_REPOSITORY_URL", "")
+    manylinux      = environ.get("CIBW_MANYLINUX_I686_IMAGE", "")
 
     stderr.write("Deployment-related environment variables:\n"
                  "DRIVER               = {!r}\n"
@@ -74,7 +75,11 @@ def main():
         stderr.write("No deployment for this build.\n")
         exit(0)
 
-    do_deployment(travis_tag, travis_os)
+    # There are two Linux builds, one for manylinux1 and one for manylinux2010.
+    # We want to upload the source tar.gz, but only for one of them.
+    build_sdist = (manylinux == "manylinux2010")
+
+    do_deployment(travis_tag, travis_os, build_sdist)
 
 
 if __name__ == "__main__":
