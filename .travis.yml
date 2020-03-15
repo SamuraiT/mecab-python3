@@ -22,7 +22,7 @@ matrix:
     services: docker
     env: DRIVER=cibuildwheel MECAB=bundled CIBW_MANYLINUX_X86_64_IMAGE=manylinux2010 CIBW_MANYLINUX_I686_IMAGE=manylinux2010 CIBW_SKIP=pp*
   - os: osx
-    env: DRIVER=cibuildwheel MECAB=bundled CIBW_SKIP=cp35-*
+    env: DRIVER=cibuildwheel MECAB=bundled CIBW_SKIP="cp35-* cp27-*"
 
 # Only run the deployment step if the build step succeeded.
 # This prevents partial uploads in case the build crashed after
