@@ -12,6 +12,7 @@ from . import _MeCab
 import contextlib
 import os
 import tempfile
+import shlex
 
 
 #
@@ -94,15 +95,21 @@ def _mecabrc_for_bundled_dictionary():
 
 
 class Tagger(_MeCab.Tagger):
-    def __init__(self, *args):
+    def __init__(self, args=""):
+        args = ["-C"] + shlex.split(args)
+        # need to encode the strings to bytes, see here:
+        # https://stackoverflow.com/questions/48391926/python-swig-in-typemap-does-not-work
+        args = [x.encode('utf-8') for x in args]
         with _mecabrc_for_bundled_dictionary():
-            super(Tagger, self).__init__(*args)
+            super(Tagger, self).__init__(args)
 
 
 class Model(_MeCab.Model):
-    def __init__(self, *args):
+    def __init__(self, args=""):
+        args = ["-C"] + shlex.split(args)
+        args = [x.encode('utf-8') for x in args]
         with _mecabrc_for_bundled_dictionary():
-            super(Model, self).__init__(*args)
+            super(Model, self).__init__(args)
 
 
 __all__.append("Model")
