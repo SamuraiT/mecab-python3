@@ -3,9 +3,10 @@
 
 # mecab-python3
 
-This is a Python wrapper for the [MeCab][] morphological analyzer for
-Japanese text.  It works with Python 3.5 and greater, as well as
-Python 2.7.
+This is a Python wrapper for the [MeCab][] morphological analyzer for Japanese
+text. It works with Python 3.5 and greater, as well as Python 2.7. (Note:
+Python 3.5 is not supported on OSX, see [this
+issue](https://github.com/SamuraiT/mecab-python3/issues/41)). 
 
 [MeCab]: https://taku910.github.io/mecab/
 
