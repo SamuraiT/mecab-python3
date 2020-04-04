@@ -96,7 +96,8 @@ def _mecabrc_for_bundled_dictionary():
 
 class Tagger(_MeCab.Tagger):
     def __init__(self, args=""):
-        args = ["-C"] + shlex.split(args)
+        # XXX The first argument is ignored for unclear reasons.
+        args = ['', '-C'] + shlex.split(args)
         # need to encode the strings to bytes, see here:
         # https://stackoverflow.com/questions/48391926/python-swig-in-typemap-does-not-work
         args = [x.encode('utf-8') for x in args]
@@ -106,7 +107,7 @@ class Tagger(_MeCab.Tagger):
 
 class Model(_MeCab.Model):
     def __init__(self, args=""):
-        args = ["-C"] + shlex.split(args)
+        args = ['', '-C'] + shlex.split(args)
         args = [x.encode('utf-8') for x in args]
         with _mecabrc_for_bundled_dictionary():
             super(Model, self).__init__(args)
