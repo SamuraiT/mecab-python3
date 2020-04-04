@@ -96,7 +96,9 @@ def _mecabrc_for_bundled_dictionary():
 
 class Tagger(_MeCab.Tagger):
     def __init__(self, args=""):
-        # XXX The first argument is ignored for unclear reasons.
+        # The first argument here isn't used . In the MeCab binary the argc and
+        # argv from the shell are re-used, so the first element will be the
+        # binary name.
         args = ['', '-C'] + shlex.split(args)
         # need to encode the strings to bytes, see here:
         # https://stackoverflow.com/questions/48391926/python-swig-in-typemap-does-not-work
