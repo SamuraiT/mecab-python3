@@ -9,11 +9,8 @@
 from __future__ import absolute_import
 from . import _MeCab
 
-import contextlib
 import os
-import tempfile
 import shlex
-
 
 #
 # Most of the public symbols come directly from the internal _MeCab
@@ -38,61 +35,12 @@ def _reexport_filtered(thismod, submod):
 __all__ = _reexport_filtered(__import__(__name__), _MeCab)
 del _reexport_filtered
 
-
 #
 # Version information
 #
 
 VERSION = _MeCab.Tagger_version()
 __all__.append("VERSION")
-
-
-#
-# Detect whether or not libmecab and a dictionary have been bundled.
-# If they have, pass that information down to the library when
-# initializing Model and Tagger objects.
-#
-def _init_bundled_info():
-    global BUNDLED_DICDIR
-    global _BUNDLED_MECABTMPL
-    pkgdatadir = os.path.dirname(__file__)
-    dicdir = os.path.join(pkgdatadir, "dic")
-    mecabtmpl = os.path.join(pkgdatadir, "mecabrc.in")
-    if os.path.isdir(dicdir) and os.path.isfile(mecabtmpl):
-        BUNDLED_DICDIR = os.path.abspath(dicdir)
-        _BUNDLED_MECABTMPL = os.path.abspath(mecabtmpl)
-    else:
-        BUNDLED_DICDIR = None
-        _BUNDLED_MECABTMPL = None
-
-
-_init_bundled_info()
-del _init_bundled_info
-__all__.append("BUNDLED_DICDIR")
-
-
-@contextlib.contextmanager
-def _mecabrc_for_bundled_dictionary():
-    dicdir = BUNDLED_DICDIR
-    if dicdir is not None and "MECABRC" not in os.environ:
-        mecabtmpl = _BUNDLED_MECABTMPL
-        # FIXME: This will not work if the pathname BUNDLED_DICDIR
-        # contains non-ASCII characters.
-        with tempfile.NamedTemporaryFile(prefix="mecabrc.") as rc:
-            with open(mecabtmpl, "rb") as rctmpl:
-                template = rctmpl.read().decode("ascii")
-            template = template.replace("@DICDIR@", dicdir)
-            rc.write(template.encode("ascii"))
-            rc.flush()
-
-            os.environ["MECABRC"] = rc.name
-            try:
-                yield
-            finally:
-                del os.environ["MECABRC"]
-    else:
-        yield
-
 
 class Tagger(_MeCab.Tagger):
     def __init__(self, args=""):
@@ -103,16 +51,14 @@ class Tagger(_MeCab.Tagger):
         # need to encode the strings to bytes, see here:
         # https://stackoverflow.com/questions/48391926/python-swig-in-typemap-does-not-work
         args = [x.encode('utf-8') for x in args]
-        with _mecabrc_for_bundled_dictionary():
-            super(Tagger, self).__init__(args)
+        super(Tagger, self).__init__(args)
 
 
 class Model(_MeCab.Model):
     def __init__(self, args=""):
         args = ['', '-C'] + shlex.split(args)
         args = [x.encode('utf-8') for x in args]
-        with _mecabrc_for_bundled_dictionary():
-            super(Model, self).__init__(args)
+        super(Model, self).__init__(args)
 
 
 __all__.append("Model")
