@@ -61,6 +61,25 @@ def try_import_unidic():
             return
 
 
+FAILMESSAGE = """
+Failed when trying to initialize MeCab. Some things to check:
+
+    - If you are not using a wheel, do you have mecab installed?
+
+    - Do you have a dictionary installed? If not do this:
+
+        pip install unidic-lite
+
+    - If on Windows make sure you have this installed:
+
+        https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads
+
+If you are still having trouble, please file an issue here:
+
+    https://github.com/SamuraiT/mecab-python3/issues
+"""
+
+
 class Tagger(_MeCab.Tagger):
     def __init__(self, args=""):
         # First check for Unidic.
@@ -77,7 +96,12 @@ class Tagger(_MeCab.Tagger):
         # need to encode the strings to bytes, see here:
         # https://stackoverflow.com/questions/48391926/python-swig-in-typemap-does-not-work
         args = [x.encode('utf-8') for x in args]
-        super(Tagger, self).__init__(args)
+
+        try:
+            super(Tagger, self).__init__(args)
+        except RuntimeError:
+            print(FAILMESSAGE)
+            raise
 
 
 class Model(_MeCab.Model):
@@ -89,7 +113,12 @@ class Model(_MeCab.Model):
             args = '-r "{}" -d "{}" '.format(mecabrc, unidicdir) + args
         args = ['', '-C'] + shlex.split(args)
         args = [x.encode('utf-8') for x in args]
-        super(Model, self).__init__(args)
+
+        try:
+            super(Model, self).__init__(args)
+        except RuntimeError:
+            print(FAILMESSAGE)
+            raise
 
 
 __all__.append("Model")
