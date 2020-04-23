@@ -1,0 +1,70 @@
+name: Build Python Windows wheels
+
+on:
+  push:
+    branches:
+      - master
+      - windows-action
+  create:
+
+
+jobs:
+  build:
+    runs-on: windows-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [2.7, 3.5, 3.6, 3.7, 3.8]
+        include:
+          - python-version: 2.7
+            py-short: 27
+            py-short2: 27m
+          - python-version: 3.5
+            py-short: 35
+            py-short2: 35m
+          - python-version: 3.6
+            py-short: 36
+            py-short2: 36m
+          - python-version: 3.7
+            py-short: 37
+            py-short2: 37m
+          - python-version: 3.8
+            py-short: 38
+            py-short2: 38
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Cache mecab
+      id: cache-mecab
+      uses: actions/cache@v1
+      with:
+        path: C:/mecab
+        key: mecab-win-build
+    - name: Download MeCab Win and Unzip it
+      if: steps.cache-mecab.outputs.cache-hit != 'true'
+      shell: bash
+      run: |
+        curl -LO "https://github.com/chezou/mecab/releases/download/mecab-0.996-msvc-5/mecab-msvc-x64.zip"
+        unzip -o "mecab-msvc-x64.zip" -d c:/mecab
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade setuptools wheel pip
+        pip install -r requirements.txt
+    - name: Build wheel
+      run: |
+        python setup.py bdist_wheel
+    - name: Upload Wheel
+      uses: actions/upload-artifact@v1
+      with:
+        name: win-wheels
+        path: dist
+    - name: Check wheels
+      shell: bash
+      run: |
+        ls -la
+        VERSION=$(python setup.py --version)
+        pip install "dist/mecab-python3-${VERSION}-cp${{ matrix.py-short }}-cp${{ matrix.py-short2 }}-win_amd64.whl"
+
