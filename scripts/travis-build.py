@@ -117,12 +117,10 @@ def cibuildwheel_build(MECAB, TRAVIS_OS):
         mkdir_p("build")
         cibuildwheel_ubuntu_install_buildreqs()
         cibuildwheel_ubuntu_prep_swig()
-        #cibuildwheel_ubuntu_prep_dictionary()
 
     elif TRAVIS_OS == "osx":
         mkdir_p("build")
         cibuildwheel_osx_install_buildreqs()
-        #cibuildwheel_osx_prep_dictionary()
 
     else:
         sys.stderr.write("Operating system {!r} not yet supported by "

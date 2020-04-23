@@ -4,7 +4,6 @@
 # Minimal test of MeCab functionality.
 
 import contextlib
-import os
 import sys
 import unittest
 
