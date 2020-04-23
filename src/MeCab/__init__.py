@@ -12,6 +12,7 @@ from . import _MeCab
 import os
 import shlex
 
+
 #
 # Most of the public symbols come directly from the internal _MeCab
 # module.
@@ -42,10 +43,11 @@ del _reexport_filtered
 VERSION = _MeCab.Tagger_version()
 __all__.append("VERSION")
 
+
 def try_import_unidic():
     """Import unidic or unidic-lite if available. Return dicdir.
 
-    This is specifically for dictionaries installed via pip. 
+    This is specifically for dictionaries installed via pip.
     """
     try:
         import unidic
