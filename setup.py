@@ -184,10 +184,17 @@ if os.name == 'nt':
                           libraries=libraries,
                           include_dirs=include_dirs,
                           library_dirs=library_dirs)
+    # We use a prebuilt MeCab so this is taken care of
+    cmdclass = {}
 else:
     data_files = []
     MECAB_EXTENSION = Extension("MeCab._MeCab", 
                           ["src/MeCab/MeCab_wrap.cpp"])
+    # These are necessary to invoke the MeCab build
+    cmdclass = {
+            'build_ext': build_ext,
+            'build_py': build_py
+    }
 
 setup(name = "mecab-python3",
       description =
@@ -203,6 +210,7 @@ setup(name = "mecab-python3",
       packages = ["MeCab"],
       data_files = data_files,
       ext_modules = [MECAB_EXTENSION],
+      cmdclass = cmdclass,
       setup_requires = ["setuptools_scm"],
       classifiers = [
           "Development Status :: 6 - Mature",
