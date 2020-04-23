@@ -61,6 +61,7 @@ jobs:
       shell: bash
       run: |
         ls -la
+        ls -la dist
         VERSION=$(python setup.py --version)
         pip install "dist/mecab-python3-${VERSION}-cp${{ matrix.py-short }}-cp${{ matrix.py-short2 }}-win_amd64.whl"
 
