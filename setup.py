@@ -177,7 +177,7 @@ if os.name == 'nt':
     include_dirs = [WIN_MECAB_DIR]
     library_dirs = [WIN_MECAB_DIR]
     libraries = ['libmecab']
-    data_files = [("lib\\site-packages\\", ["{}\\libmecab.dll".format(WIN_MECAB_DIR)])]
+    data_files = [("lib\\site-packages\\MeCab\\", ["{}\\libmecab.dll".format(WIN_MECAB_DIR)])]
     MECAB_EXTENSION = Extension("MeCab._MeCab",
                           ["src/MeCab/MeCab_wrap.cpp"],
                           libraries=libraries,
