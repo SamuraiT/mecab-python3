@@ -233,12 +233,23 @@ class build_py(_build_py):
         else:
             yield data
 
-WIN_MECAB_DIR = r'c:\mecab'
+# Windows requires special prep
+if os.name == 'nt':
+    WIN_MECAB_DIR = r'c:\mecab'
 
-include_dirs = [WIN_MECAB_DIR]
-library_dirs = [WIN_MECAB_DIR]
-libraries = ['libmecab']
-data_files = [("lib\\site-packages\\", ["{}\\libmecab.dll".format(WIN_MECAB_DIR)])]
+    include_dirs = [WIN_MECAB_DIR]
+    library_dirs = [WIN_MECAB_DIR]
+    libraries = ['libmecab']
+    data_files = [("lib\\site-packages\\", ["{}\\libmecab.dll".format(WIN_MECAB_DIR)])]
+    MECAB_EXTENSION = Extension("MeCab._MeCab", 
+                          ["src/MeCab/MeCab_wrap.cpp"],
+                          libraries=libraries,
+                          include_dirs=include_dirs,
+                          library_dirs=library_dirs)
+else:
+    data_files = []
+    MECAB_EXTENSION = Extension("MeCab._MeCab", 
+                          ["src/MeCab/MeCab_wrap.cpp"])
 
 setup(name = "mecab-python3",
       description =
@@ -253,13 +264,7 @@ setup(name = "mecab-python3",
       package_dir = {"": "src"},
       packages = ["MeCab"],
       data_files = data_files,
-      ext_modules = [
-          Extension("MeCab._MeCab", 
-              ["src/MeCab/MeCab_wrap.cpp"],
-              libraries=libraries,
-              include_dirs=include_dirs,
-              library_dirs=library_dirs)
-      ],
+      ext_modules = [MECAB_EXTENSION],
       setup_requires = ["setuptools_scm"],
       classifiers = [
           "Development Status :: 6 - Mature",
