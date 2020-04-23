@@ -20,7 +20,7 @@ def tox_ubuntu_install_buildreqs(MECAB):
 
     packages = [
         "python2.7-dev", "python3.5-dev", "python3.6-dev",
-        "python3.7-dev", "tox", "swig", "mecab-ipadic-utf8"
+        "python3.7-dev", "tox", "swig"
     ]
     if MECAB == "system":
         packages.append("libmecab-dev")
@@ -59,8 +59,7 @@ def tox_build(MECAB, TRAVIS_OS):
 
 def cibuildwheel_ubuntu_install_buildreqs():
     run("sudo", "apt-get", "-y", "update")
-    run("sudo", "apt-get", "-y", "install",
-        "mecab-ipadic-utf8", "virtualenv")
+    run("sudo", "apt-get", "-y", "install", "virtualenv")
 
 
 def cibuildwheel_ubuntu_prep_swig():
@@ -95,18 +94,11 @@ def cibuildwheel_osx_install_buildreqs():
     os.environ.pop("HOMEBREW_INSTALL_CLEANUP", None)
     os.environ["HOMEBREW_NO_INSTALL_CLEANUP"] = "yes"
 
+    # TODO: All calls to brew can probably be removed
     run("brew", "update")
     run("brew", "--version")
-    run("brew", "install", "swig", "mecab-ipadic")
+    run("brew", "install", "swig")
     run("pip3", "install", "virtualenv")
-
-
-def cibuildwheel_osx_prep_dictionary():
-    mecab_ipadic_prefix = run_output("brew", "--prefix", "mecab-ipadic")
-    dicdir = os.path.join(mecab_ipadic_prefix, "lib/mecab/dic/ipadic")
-
-    # dicdir may be a symlink, force resolution
-    run("cp", "-a", dicdir+"/.", "build/dic")
 
 
 def cibuildwheel_build(MECAB, TRAVIS_OS):
@@ -125,12 +117,12 @@ def cibuildwheel_build(MECAB, TRAVIS_OS):
         mkdir_p("build")
         cibuildwheel_ubuntu_install_buildreqs()
         cibuildwheel_ubuntu_prep_swig()
-        cibuildwheel_ubuntu_prep_dictionary()
+        #cibuildwheel_ubuntu_prep_dictionary()
 
     elif TRAVIS_OS == "osx":
         mkdir_p("build")
         cibuildwheel_osx_install_buildreqs()
-        cibuildwheel_osx_prep_dictionary()
+        #cibuildwheel_osx_prep_dictionary()
 
     else:
         sys.stderr.write("Operating system {!r} not yet supported by "
@@ -146,6 +138,9 @@ def cibuildwheel_build(MECAB, TRAVIS_OS):
     activate_venv("build/venv")
 
     run("pip", "install", "cibuildwheel")
+
+    # The tests won't work if a dictionary isn't installed.
+    run("pip", "install", "unidic-lite")
 
     # environment variables to control cibuildwheel
     S = setenv
