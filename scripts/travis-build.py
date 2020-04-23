@@ -138,15 +138,16 @@ def cibuildwheel_build(MECAB, TRAVIS_OS):
 
     run("pip", "install", "cibuildwheel")
 
-    # The tests won't work if a dictionary isn't installed.
-    run("pip", "install", "unidic-lite")
-
     # environment variables to control cibuildwheel
+    TEST_REQUIRES = "pytest"
+    if MECAB == "bundled":
+        TEST_REQUIRES += " unidic-lite"
+
     S = setenv
     S("CIBW_ENVIRONMENT", "MECAB_DICDIR=build/dic BUNDLE_LIBMECAB=true")
     S("CIBW_BEFORE_BUILD", "{project}/scripts/cibw-prepare-"+TRAVIS_OS+".py")
     S("CIBW_TEST_COMMAND", "pytest {project}/test/")
-    S("CIBW_TEST_REQUIRES", "pytest")
+    S("CIBW_TEST_REQUIRES", TEST_REQUIRES)
     S("CIBW_BUILD_VERBOSITY", "3")
 
     run("cibuildwheel", "--output-dir", "wheelhouse")
