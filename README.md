@@ -10,6 +10,10 @@ issue](https://github.com/SamuraiT/mecab-python3/issues/41)).
 
 [MeCab]: https://taku910.github.io/mecab/
 
+Note that Windows wheels require a [Microsoft Visual C++ Redistributable][msvc], so be sure to install that.
+
+[msvc]: https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads
+
 # Basic usage
 
 ```py
