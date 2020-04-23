@@ -42,12 +42,36 @@ del _reexport_filtered
 VERSION = _MeCab.Tagger_version()
 __all__.append("VERSION")
 
+def try_import_unidic():
+    """Import unidic or unidic-lite if available. Return dicdir.
+
+    This is specifically for dictionaries installed via pip. 
+    """
+    try:
+        import unidic
+        return unidic.DICDIR
+    except ImportError:
+        try:
+            import unidic_lite
+            return unidic_lite.DICDIR
+        except ImportError:
+            # This is OK, just give up.
+            return
+
+
 class Tagger(_MeCab.Tagger):
     def __init__(self, args=""):
+        # First check for Unidic.
+        unidicdir = try_import_unidic()
+        if unidicdir:
+            mecabrc = os.path.join(unidicdir, 'mecabrc')
+            args = '-r "{}" -d "{}" '.format(mecabrc, unidicdir) + args
+
         # The first argument here isn't used . In the MeCab binary the argc and
         # argv from the shell are re-used, so the first element will be the
         # binary name.
         args = ['', '-C'] + shlex.split(args)
+
         # need to encode the strings to bytes, see here:
         # https://stackoverflow.com/questions/48391926/python-swig-in-typemap-does-not-work
         args = [x.encode('utf-8') for x in args]
@@ -56,6 +80,11 @@ class Tagger(_MeCab.Tagger):
 
 class Model(_MeCab.Model):
     def __init__(self, args=""):
+        # Note this is the same as the code for the Tagger.
+        unidicdir = try_import_unidic()
+        if unidicdir:
+            mecabrc = os.path.join(unidicdir, 'mecabrc')
+            args = '-r "{}" -d "{}" '.format(mecabrc, unidicdir) + args
         args = ['', '-C'] + shlex.split(args)
         args = [x.encode('utf-8') for x in args]
         super(Model, self).__init__(args)
