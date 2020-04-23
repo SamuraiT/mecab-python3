@@ -10,6 +10,7 @@ from __future__ import absolute_import
 from . import _MeCab
 
 import os
+import sys
 import shlex
 
 
@@ -100,7 +101,7 @@ class Tagger(_MeCab.Tagger):
         try:
             super(Tagger, self).__init__(args)
         except RuntimeError:
-            print(FAILMESSAGE)
+            sys.stderr.write(FAILMESSAGE)
             raise
 
 
@@ -117,7 +118,7 @@ class Model(_MeCab.Model):
         try:
             super(Model, self).__init__(args)
         except RuntimeError:
-            print(FAILMESSAGE)
+            sys.stderr.write(FAILMESSAGE)
             raise
 
 
