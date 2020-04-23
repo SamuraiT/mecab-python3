@@ -2,7 +2,6 @@ include *.md *.html
 include AUTHORS BSD GPL LGPL COPYING
 include MANIFEST.in
 include tox.ini
-include src/MeCab/mecabrc.in
 include scripts/*.py
 include test/*.py
 recursive-include .eggs *

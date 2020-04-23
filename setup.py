@@ -165,7 +165,6 @@ class build_py(_build_py):
         if package == "MeCab" and USE_BUNDLED_LIBMECAB:
             d_package, d_srcdir, d_builddir, d_filenames = data
             assert d_package == package
-            d_filenames.append("mecabrc.in")
             yield d_package, d_srcdir, d_builddir, d_filenames
 
         else:
