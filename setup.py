@@ -251,7 +251,7 @@ setup(name = "mecab-python3",
       package_dir = {"": "src"},
       packages = ["MeCab"],
       ext_modules = [
-          Extension("MeCab._MeCab", ["src/MeCab/MeCab.i"])
+          Extension("MeCab._MeCab", ["src/MeCab/MeCab_wrap.cpp"])
       ],
       setup_requires = ["setuptools_scm"],
       classifiers = [
