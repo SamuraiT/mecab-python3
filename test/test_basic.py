@@ -30,7 +30,7 @@ SENTENCES = (
 # BUG: If we instantiate a new tagger for each test case, then the
 # second and subsequent tagger instantiations will produce garbage.
 # I suspect this is a bug somewhere within libmecab itself.
-TAGGER = MeCab.Tagger(os.environ.get("MECAB_TAGGER_ARGS", ""))
+TAGGER = MeCab.Tagger()
 
 # Check if we are using Unidic and only test in that case. In particular this
 # uses only unidic-lite since there are different versions of Unidic.
