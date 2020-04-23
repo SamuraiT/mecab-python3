@@ -244,10 +244,10 @@ setup(name = "mecab-python3",
       url = "https://github.com/SamuraiT/mecab-python3",
       license = "BSD",
       use_scm_version=True,
-      cmdclass = {
-          "build_ext": build_ext,
-          "build_py": build_py
-      },
+      #cmdclass = {
+      #    "build_ext": build_ext,
+      #    "build_py": build_py
+      #},
       package_dir = {"": "src"},
       packages = ["MeCab"],
       ext_modules = [
