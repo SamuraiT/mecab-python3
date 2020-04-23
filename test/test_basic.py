@@ -36,7 +36,7 @@ TAGGER = MeCab.Tagger(os.environ.get("MECAB_TAGGER_ARGS", ""))
 # uses only unidic-lite since there are different versions of Unidic.
 USING_UNIDIC = False
 try:
-    import unidic_lite
+    import unidic_lite   # noqa: F401
     USING_UNIDIC = True
 except ImportError:
     pass

@@ -152,6 +152,7 @@ class build_ext(_build_ext):
         if ext.name == "MeCab._MeCab":
             discard_swig_wrappers(ext)
 
+
 class build_py(_build_py):
     def _get_data_files(self):
         self.analyze_manifest()
@@ -170,6 +171,7 @@ class build_py(_build_py):
         else:
             yield data
 
+
 # Windows requires special prep
 if os.name == 'nt':
     WIN_MECAB_DIR = r'c:\mecab'
@@ -177,22 +179,23 @@ if os.name == 'nt':
     include_dirs = [WIN_MECAB_DIR]
     library_dirs = [WIN_MECAB_DIR]
     libraries = ['libmecab']
-    data_files = [("lib\\site-packages\\MeCab\\", ["{}\\libmecab.dll".format(WIN_MECAB_DIR)])]
+    data_files = [("lib\\site-packages\\MeCab\\",
+                  ["{}\\libmecab.dll".format(WIN_MECAB_DIR)])]
     MECAB_EXTENSION = Extension("MeCab._MeCab",
-                          ["src/MeCab/MeCab_wrap.cpp"],
-                          libraries=libraries,
-                          include_dirs=include_dirs,
-                          library_dirs=library_dirs)
+                                ["src/MeCab/MeCab_wrap.cpp"],
+                                libraries=libraries,
+                                include_dirs=include_dirs,
+                                library_dirs=library_dirs)
     # We use a prebuilt MeCab so this is taken care of
     cmdclass = {}
 else:
     data_files = []
     MECAB_EXTENSION = Extension("MeCab._MeCab",
-                          ["src/MeCab/MeCab_wrap.cpp"])
+                                ["src/MeCab/MeCab_wrap.cpp"])
     # These are necessary to invoke the MeCab build
     cmdclass = {
-            'build_ext': build_ext,
-            'build_py': build_py
+        'build_ext': build_ext,
+        'build_py': build_py
     }
 
 setup(name = "mecab-python3",
