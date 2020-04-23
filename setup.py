@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-import glob
 import os
 import subprocess
 import sys
@@ -153,62 +152,6 @@ class build_ext(_build_ext):
         if ext.name == "MeCab._MeCab":
             discard_swig_wrappers(ext)
 
-
-# The bundled libmecab needs a bundled dictionary, which we copy
-# from somewhere in the file system.
-def dicdir_from_mecabrc(rc_fname):
-    try:
-        with open(rc_fname, "rt") as fp:
-            for line in fp:
-                line = line.strip()
-                if not line or line[0] == ';':
-                    continue
-                if line[:6] == "dicdir":
-                    line = line[6:].lstrip()
-                    if not line:
-                        return None
-
-                    if line[0] == '=':
-                        line = line[1:].lstrip()
-                    if line:
-                        return line
-        return None
-    except (IOError, OSError):
-        return None
-
-
-def mecab_dictionary_contents():
-    dicdir = None
-    if "MECAB_DICDIR" in os.environ:
-        d = os.environ["MECAB_DICDIR"]
-        if d and os.path.isdir(d):
-            dicdir = os.path.abspath(d)
-    if dicdir is None and "MECAB_DICPATH" in os.environ:
-        for d in os.environ["MECAB_DICPATH"].split(os.pathsep):
-            if d and os.path.isdir(d):
-                dicdir = os.path.abspath(d)
-                break
-    if dicdir is None and "MECABRC" in os.environ:
-        d = dicdir_from_mecabrc(os.environ["MECABRC"])
-        if d and os.path.isdir(d):
-            dicdir = os.path.abspath(d)
-    if dicdir is None:
-        for rc in ["/usr/local/etc/mecabrc", "/etc/mecabrc"]:
-            d = dicdir_from_mecabrc(rc)
-            if d and os.path.isdir(d):
-                dicdir = os.path.abspath(d)
-                break
-    if dicdir is None:
-        return None, []
-
-    setup_log.info("MeCab dictionary found in {}".format(dicdir))
-    cwd = os.getcwd()
-    os.chdir(dicdir)
-    dicfiles = glob.glob("*")
-    os.chdir(cwd)
-    return dicdir, dicfiles
-
-
 class build_py(_build_py):
     def _get_data_files(self):
         self.analyze_manifest()
@@ -225,11 +168,6 @@ class build_py(_build_py):
             d_filenames.append("mecabrc.in")
             yield d_package, d_srcdir, d_builddir, d_filenames
 
-            dicdir, dicfiles = mecab_dictionary_contents()
-            if dicdir and dicfiles:
-                yield (d_package, dicdir,
-                       os.path.join(d_builddir, "dic"),
-                       dicfiles)
         else:
             yield data
 

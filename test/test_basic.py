@@ -18,7 +18,7 @@ SENTENCES = (
     ("すももももももももの内", "すもも も もも も もも の 内".split()),
     ("吾輩は猫である。", "吾輩 は 猫 で ある 。".split()),
     # tokenization below is wrong, but that's ipadic
-    ("ははははは丈夫だ", "は は は は は 丈夫 だ".split()),
+    ("ははははは丈夫だ", "はははは は 丈夫 だ".split()),
     ("カムパネルラが手をあげました。", "カムパネルラ が 手 を あげ まし た 。".split()),
     ("コミックマーケットは同人誌を中心にしてすべての表現者を受け入れ、"
      "継続することを目的とした表現の可能性を拡げるための「場」である",
@@ -32,11 +32,14 @@ SENTENCES = (
 # I suspect this is a bug somewhere within libmecab itself.
 TAGGER = MeCab.Tagger(os.environ.get("MECAB_TAGGER_ARGS", ""))
 
-# check if we are using IPADIC and only test in that case
-USING_IPADIC = (
-    TAGGER.parseToNode("日本").next.feature
-    == "名詞,固有名詞,地域,国,*,*,日本,ニッポン,ニッポン"
-)
+# Check if we are using Unidic and only test in that case. In particular this
+# uses only unidic-lite since there are different versions of Unidic.
+USING_UNIDIC = False
+try:
+    import unidic_lite
+    USING_UNIDIC = True
+except ImportError:
+    pass
 
 
 # unittest.TestCase.subTest is only available in python >=3.5, not 2.x
@@ -117,7 +120,7 @@ class TestTagger(unittest.TestCase):
             m = m.next
         self.validateNodes(SENTENCE, nodes)
 
-    @unittest.skipIf(not USING_IPADIC, "Not using ipadic")
+    @unittest.skipIf(not USING_UNIDIC, "Not using unidic")
     def test_tokenization(self):
         for sentence, answer in SENTENCES:
             tokens = [tok[0] for tok in self.tokenize(sentence)]
