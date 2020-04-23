@@ -233,6 +233,12 @@ class build_py(_build_py):
         else:
             yield data
 
+WIN_MECAB_DIR = r'c:\mecab'
+
+include_dirs = [WIN_MECAB_DIR]
+library_dirs = [WIN_MECAB_DIR]
+libraries = ['libmecab']
+data_files = [("lib\\site-packages\\", ["{}\\libmecab.dll".format(WIN_MECAB_DIR)])]
 
 setup(name = "mecab-python3",
       description =
@@ -244,14 +250,15 @@ setup(name = "mecab-python3",
       url = "https://github.com/SamuraiT/mecab-python3",
       license = "BSD",
       use_scm_version=True,
-      #cmdclass = {
-      #    "build_ext": build_ext,
-      #    "build_py": build_py
-      #},
       package_dir = {"": "src"},
       packages = ["MeCab"],
+      data_files = data_files,
       ext_modules = [
-          Extension("MeCab._MeCab", ["src/MeCab/MeCab_wrap.cpp"])
+          Extension("MeCab._MeCab", 
+              ["src/MeCab/MeCab_wrap.cpp"],
+              libraries=libraries,
+              include_dirs=include_dirs,
+              library_dirs=library_dirs)
       ],
       setup_requires = ["setuptools_scm"],
       classifiers = [
