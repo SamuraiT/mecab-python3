@@ -214,6 +214,10 @@ setup(name = "mecab-python3",
       ext_modules = [MECAB_EXTENSION],
       cmdclass = cmdclass,
       setup_requires = ["setuptools_scm"],
+      extras_require = {
+          'unidic': ['unidic'],
+          'unidic-lite': ['unidic-lite'],
+      },
       classifiers = [
           "Development Status :: 6 - Mature",
           "Programming Language :: Python :: 2",
