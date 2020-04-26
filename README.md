@@ -4,13 +4,15 @@
 # mecab-python3
 
 This is a Python wrapper for the [MeCab][] morphological analyzer for Japanese
-text. It works with Python 3.5 and greater, as well as Python 2.7. (Note:
-Python 3.5 is not supported on OSX, see [this
-issue](https://github.com/SamuraiT/mecab-python3/issues/41)). 
+text. It works with Python 3.5 and greater, as well as Python 2.7.
+
+(Note: Python 3.5 is not supported on OSX, see [this issue][osx-issue]). 
 
 [MeCab]: https://taku910.github.io/mecab/
+[osx-issue]: https://github.com/SamuraiT/mecab-python3/issues/41
 
-Note that Windows wheels require a [Microsoft Visual C++ Redistributable][msvc], so be sure to install that.
+Note that Windows wheels require a [Microsoft Visual C++
+Redistributable][msvc], so be sure to install that.
 
 [msvc]: https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads
 
@@ -32,24 +34,27 @@ EOS
 ```
 
 The API for `mecab-python3` closely follows the API for MeCab itself,
-even when this makes it not very “Pythonic.”  Please consult the MeCab
-documentation for more information.
+even when this makes it not very “Pythonic.”  Please consult the [official MeCab
+documentation][mecab-docs] for more information.
+
+[mecab-docs]: https://taku910.github.io/mecab/
 
 # Installation
 
-Binary wheels are available for MacOS X and Linux, and are installed
-by default when you use `pip`:
+Binary wheels are available for MacOS X, Linux, and Windows (64bit) are
+installed by default when you use `pip`:
 
 ```sh
 pip install mecab-python3
 ```
 
-These wheels include an internal (statically linked) copy of the MeCab
-library, and a copy of the [`mecab-ipadic`][ipadic] dictionary (using
-UTF-8 text encoding), which is automatically used by default.  If you
-wish to use a different dictionary, you will need to install it
-yourself, write a `mecabrc` file directing MeCab to use it, and set
-the environment variable `MECABRC` to point to this file.
+These wheels include an internal (statically linked) copy of the MeCab library,
+but not dictionary. In order to use MeCab you'll need to install a dictionary.
+`unidic-lite` is a good one to start with:
+
+```sh
+pip install unidic-lite
+```
 
 To build from source using pip,
 
