@@ -75,6 +75,9 @@ Failed when trying to initialize MeCab. Some things to check:
 
         https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads
 
+    - Try creating a Model with the same arguments as your Tagger; that may
+      give a more descriptive error message.
+
 If you are still having trouble, please file an issue here:
 
     https://github.com/SamuraiT/mecab-python3/issues
