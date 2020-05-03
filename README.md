@@ -24,12 +24,12 @@ Redistributable][msvc], so be sure to install that.
 >>> wakati.parse("pythonが大好きです").split()
 ['python', 'が', '大好き', 'です']
 
->>> chasen = MeCab.Tagger("-Ochasen")
->>> print(chasen.parse("pythonが大好きです"))
-python　python　　python　名詞-固有名詞-組織
-が　　　ガ　　　　が　　　助詞-格助詞-一般
-大好き　ダイスキ　大好き　名詞-形容動詞語幹
-です　　デス　　　です　　助動詞　特殊・デス　基本形
+>>> tagger = MeCab.Tagger()
+>>> print(tagger.parse("pythonが大好きです"))
+python  python  python  python  名詞-普通名詞-一般
+が      ガ      ガ      が      助詞-格助詞
+大好き  ダイスキ        ダイスキ        大好き  形状詞-一般
+です    デス    デス    です    助動詞  助動詞-デス     終止形-一般
 EOS
 ```
 
