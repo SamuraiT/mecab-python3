@@ -1,0 +1,29 @@
+#!/usr/bin/env python3
+
+"""mecab-py-info
+
+This is a script to print out mecab-python3's dictionary info. It's useful for
+debugging and checking your configuration.
+"""
+
+from MeCab import Tagger
+import sys
+
+def info(args=''):
+    """Print configuration info."""
+    tagger = Tagger(args)
+    di = tagger.dictionary_info()
+    #TODO get the package version here too
+    print("mecab-py dictionary info:")
+    print("-----")
+    while di:
+        print('version:'.ljust(10), di.version)
+        print('size:'.ljust(10), di.size)
+        print('charset:'.ljust(10), di.charset)
+        print('filename:'.ljust(10), di.filename)
+        print("-----")
+        di = di.next
+
+if __name__ == '__main__':
+    args = ' '.join(sys.argv[1:])
+    info(args)

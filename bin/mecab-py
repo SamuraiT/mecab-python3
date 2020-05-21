@@ -1,0 +1,24 @@
+#!/usr/bin/env python
+
+"""mecab-py
+
+This is a simple wrapper for mecab-python3 so you can test it from the command
+line.  Like the mecab binary, it treats each line of stdin as one sentence. You
+can pass tagger arguments here too.
+"""
+
+from MeCab import Tagger
+import sys
+import fileinput
+
+def parse(args=''):
+    """Parse input from stdin."""
+    tagger = Tagger(args)
+
+    for line in fileinput.input([]):
+        print(tagger.parse(line.strip()))
+
+
+if __name__ == '__main__':
+    args = ' '.join(sys.argv[1:])
+    parse(args)

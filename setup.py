@@ -213,6 +213,7 @@ setup(name = "mecab-python3",
       data_files = data_files,
       ext_modules = [MECAB_EXTENSION],
       cmdclass = cmdclass,
+      scripts=['bin/mecab-py', 'bin/mecab-py-info'],
       setup_requires = ["setuptools_scm"],
       extras_require = {
           'unidic': ['unidic'],
