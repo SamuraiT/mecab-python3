@@ -92,7 +92,7 @@ class Tagger(_MeCab.Tagger):
             mecabrc = os.path.join(unidicdir, 'mecabrc')
             args = '-r "{}" -d "{}" '.format(mecabrc, unidicdir) + args
 
-        # The first argument here isn't used . In the MeCab binary the argc and
+        # The first argument here isn't used. In the MeCab binary the argc and
         # argv from the shell are re-used, so the first element will be the
         # binary name.
         args = ['', '-C'] + shlex.split(args)
