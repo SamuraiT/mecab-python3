@@ -16,7 +16,8 @@ def parse(args=''):
     tagger = Tagger(args)
 
     for line in fileinput.input([]):
-        print(tagger.parse(line.strip()))
+        # strip the newline on output
+        print(tagger.parse(line.strip())[:-1])
 
 
 if __name__ == '__main__':
