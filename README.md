@@ -92,6 +92,12 @@ supported in a sanitized CI environment.  Consult the scripts in the
 [ipadic]: https://github.com/taku910/mecab/tree/master/mecab-ipadic
 [SWIG]: http://www.swig.org/
 
+# Alternatives
+
+- [fugashi](https://github.com/polm/fugashi) is a Cython wrapper for MeCab with a Pythonic interface, by the current maintainer of this libray
+- [SudachiPy](https://github.com/WorksApplications/SudachiPy) is a modern tokenizer with a maintained dictionary, though it's slower than MeCab
+- [KoNLPy](https://konlpy.org/en/latest/) is a library for Korean NLP that includes a MeCab wrapper
+
 # Licensing
 
 Like MeCab itself, `mecab-python3` is copyrighted free software by
