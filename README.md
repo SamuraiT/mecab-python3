@@ -64,34 +64,6 @@ To build from source using pip,
 pip install --no-binary :all: mecab-python3
 ```
 
-Alternatively, you can use pip to download the source, then build it
-by hand:
-
-```sh
-pip download --no-binary :all: mecab-python3
-tar zxf mecab-python3-{version}.tar.gz
-cd mecab-python3-{version}
-python3 setup.py build
-# install as you like
-```
-
-When the module is built from source, it requires the system to
-provide the MeCab library and at least one dictionary.  You must have
-[SWIG][], the MeCab library and headers, and a dictionary installed
-before running `pip install` or `setup.py build`.  For instance, on
-Debian-based Linux,
-
-```sh
-sudo apt-get install swig libmecab-dev mecab-ipadic-utf8
-```
-
-Building wheels with a bundled library and dictionary is only
-supported in a sanitized CI environment.  Consult the scripts in the
-`scripts` subdirectory of the source tree to see how it’s done.
-
-[ipadic]: https://github.com/taku910/mecab/tree/master/mecab-ipadic
-[SWIG]: http://www.swig.org/
-
 # Alternatives
 
 - [fugashi](https://github.com/polm/fugashi) is a Cython wrapper for MeCab with a Pythonic interface, by the current maintainer of this libray
