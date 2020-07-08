@@ -64,6 +64,38 @@ To build from source using pip,
 pip install --no-binary :all: mecab-python3
 ```
 
+# Common Isues
+
+If you get a `RuntimeError` when you try to run MeCab, here are some things to check:
+
+## Windows Redistributable
+
+You have to install [this][msvc] to use this package on Windows.
+
+## Installing a Dictionary
+
+Run `pip install unidic-lite` and confirm that works. If that fixes your
+problem, you either don't have a dictionary installed, or you need to specify
+your dictionary path like this:
+
+    tagger = MeCab.Tagger('-r /dev/null -d /usr/local/lib/mecab/dic/mydic')
+
+Note: on Windows, use `nul` instead of `/dev/null`. Alternately, if you have a
+`mecabrc` you can use the path after `-r`.
+
+## Specifying a mecabrc
+
+If you specify a dictionary path, you also must have a `mecabrc` file, even if
+it's empty. You can specify a `mecabrc` with `-r`. This may be necessary on
+Debian or Ubuntu, where the `mecabrc` is in `/etc/mecabrc`.
+
+## Using Unsupported Output Modes like `-Ochasen`
+
+Chasen output is not a built-in feature of MeCab, you must specify it in your
+`dicrc` or `mecabrc`. Notably, Unidic does not include Chasen output format.
+Please see [the MeCab documentation](https://taku910.github.io/mecab/#format).
+
+
 # Alternatives
 
 - [fugashi](https://github.com/polm/fugashi) is a Cython wrapper for MeCab with a Pythonic interface, by the current maintainer of this libray
