@@ -4,14 +4,11 @@
 # mecab-python3
 
 This is a Python wrapper for the [MeCab][] morphological analyzer for Japanese
-text. It works with Python 3.5 and greater, as well as Python 2.7.
+text. It works with Python 3.6 and greater, as well as Python 2.7.
 
 **issueを英語で書く必要はありません。**
 
-(Note: Python 3.5 is not supported on OSX, see [this issue][osx-issue]). 
-
 [MeCab]: https://taku910.github.io/mecab/
-[osx-issue]: https://github.com/SamuraiT/mecab-python3/issues/41
 
 Note that Windows wheels require a [Microsoft Visual C++
 Redistributable][msvc], so be sure to install that.
