@@ -81,6 +81,8 @@ Failed when trying to initialize MeCab. Some things to check:
 If you are still having trouble, please file an issue here:
 
     https://github.com/SamuraiT/mecab-python3/issues
+
+issueを英語で書く必要はありません。
 """
 
 
