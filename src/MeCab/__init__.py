@@ -6,8 +6,7 @@
 # modifications to MeCab.i, but then we would have to diverge that file
 # further from upstream.
 
-from __future__ import absolute_import
-from . import _MeCab
+from __future__ import absolute_import, print_function
 
 import os
 import sys
