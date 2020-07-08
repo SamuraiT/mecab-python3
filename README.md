@@ -64,7 +64,7 @@ To build from source using pip,
 pip install --no-binary :all: mecab-python3
 ```
 
-# Common Isues
+# Common Issues
 
 If you get a `RuntimeError` when you try to run MeCab, here are some things to check:
 
