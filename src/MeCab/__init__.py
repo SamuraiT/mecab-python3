@@ -7,6 +7,7 @@
 # further from upstream.
 
 from __future__ import absolute_import, print_function
+from . import _MeCab
 
 import os
 import sys
