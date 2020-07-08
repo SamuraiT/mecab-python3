@@ -63,33 +63,47 @@ def try_import_unidic():
 
 
 FAILMESSAGE = """
-Failed when trying to initialize MeCab. Some things to check:
+Failed initializing MeCab. Please see the README for possible solutions:
 
-    - If you are not using a wheel, do you have mecab installed?
+    https://github.com/SamuraiT/mecab-python3#common-issues
 
-    - Do you have a dictionary installed? If not do this:
-
-        pip install unidic-lite
-
-    - If on Windows make sure you have this installed:
-
-        https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads
-
-    - Try creating a Model with the same arguments as your Tagger; that may
-      give a more descriptive error message.
-
-If you are still having trouble, please file an issue here:
+If you are still having trouble, please file an issue here, and include the
+ERROR DETAILS below:
 
     https://github.com/SamuraiT/mecab-python3/issues
 
 issueを英語で書く必要はありません。
-"""
 
+------------------- ERROR DETAILS ------------------------"""
+
+def get_error_details(args):
+    """Instantiate a Model to get output from MeCab.
+
+    Due to an upstream bug, errors in Tagger intialization don't give useful
+    error output."""
+    try:
+        model = Model(args, error_check=True)
+    except RuntimeError as err:
+        # get the MeCab error string
+        errstr = str(err)[len('RuntimeError: '):]
+        return errstr
+    
+    return "No error, your args appear to work."
+
+def error_info(args):
+    """Print guide to solving initialization errors."""
+    print(FAILMESSAGE, file=sys.stderr)
+    print('arguments:', args, file=sys.stderr)
+
+    message = get_error_details(args)
+    print('error message:', message, file=sys.stderr)
+    print('----------------------------------------------------------')
 
 class Tagger(_MeCab.Tagger):
-    def __init__(self, args=""):
+    def __init__(self, rawargs=""):
         # First check for Unidic.
         unidicdir = try_import_unidic()
+        args = rawargs
         if unidicdir:
             mecabrc = os.path.join(unidicdir, 'mecabrc')
             args = '-r "{}" -d "{}" '.format(mecabrc, unidicdir) + args
@@ -106,14 +120,15 @@ class Tagger(_MeCab.Tagger):
         try:
             super(Tagger, self).__init__(args)
         except RuntimeError:
-            sys.stderr.write(FAILMESSAGE)
+            error_info(rawargs)
             raise
 
 
 class Model(_MeCab.Model):
-    def __init__(self, args=""):
+    def __init__(self, rawargs="", error_check=False):
         # Note this is the same as the code for the Tagger.
         unidicdir = try_import_unidic()
+        args = rawargs
         if unidicdir:
             mecabrc = os.path.join(unidicdir, 'mecabrc')
             args = '-r "{}" -d "{}" '.format(mecabrc, unidicdir) + args
@@ -123,9 +138,9 @@ class Model(_MeCab.Model):
         try:
             super(Model, self).__init__(args)
         except RuntimeError:
-            sys.stderr.write(FAILMESSAGE)
+            if not error_check:
+                error_info(rawargs)
             raise
-
 
 __all__.append("Model")
 __all__.append("Tagger")
