@@ -76,19 +76,21 @@ issueを英語で書く必要はありません。
 
 ------------------- ERROR DETAILS ------------------------"""
 
+
 def get_error_details(args):
     """Instantiate a Model to get output from MeCab.
 
     Due to an upstream bug, errors in Tagger intialization don't give useful
     error output."""
     try:
-        model = Model(args, error_check=True)
+        Model(args, error_check=True)
     except RuntimeError as err:
         # get the MeCab error string
         errstr = str(err)[len('RuntimeError: '):]
         return errstr
-    
+
     return "No error, your args appear to work."
+
 
 def error_info(args):
     """Print guide to solving initialization errors."""
@@ -98,6 +100,7 @@ def error_info(args):
     message = get_error_details(args)
     print('error message:', message, file=sys.stderr)
     print('----------------------------------------------------------')
+
 
 class Tagger(_MeCab.Tagger):
     def __init__(self, rawargs=""):
@@ -141,6 +144,7 @@ class Model(_MeCab.Model):
             if not error_check:
                 error_info(rawargs)
             raise
+
 
 __all__.append("Model")
 __all__.append("Tagger")
