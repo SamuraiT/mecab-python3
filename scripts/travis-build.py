@@ -24,7 +24,6 @@ def tox_ubuntu_install_buildreqs(MECAB):
     ]
     if MECAB == "system":
         packages.append("libmecab-dev")
-        packages.append("mecab-ipadic-utf8")
 
     run("sudo", "apt-get", "-y", "install", *packages)
 
