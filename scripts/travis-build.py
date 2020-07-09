@@ -98,7 +98,6 @@ def cibuildwheel_osx_install_buildreqs():
     # TODO: All calls to brew can probably be removed
     run("brew", "update")
     run("brew", "--version")
-    run("brew", "install", "swig")
     run("pip3", "install", "virtualenv")
 
 
