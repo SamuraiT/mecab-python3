@@ -92,6 +92,7 @@ def cibuildwheel_ubuntu_prep_dictionary():
 def cibuildwheel_osx_install_buildreqs():
     run("pip3", "install", "virtualenv")
 
+
 def cibuildwheel_build(MECAB, TRAVIS_OS):
 
     if MECAB != "bundled":
