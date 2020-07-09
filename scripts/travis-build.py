@@ -91,15 +91,7 @@ def cibuildwheel_ubuntu_prep_dictionary():
 
 
 def cibuildwheel_osx_install_buildreqs():
-    # don't waste time on "cleanup"
-    os.environ.pop("HOMEBREW_INSTALL_CLEANUP", None)
-    os.environ["HOMEBREW_NO_INSTALL_CLEANUP"] = "yes"
-
-    # TODO: All calls to brew can probably be removed
-    run("brew", "update")
-    run("brew", "--version")
     run("pip3", "install", "virtualenv")
-
 
 def cibuildwheel_build(MECAB, TRAVIS_OS):
 
