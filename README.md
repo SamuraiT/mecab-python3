@@ -82,16 +82,23 @@ Note: on Windows, use `nul` instead of `/dev/null`. Alternately, if you have a
 
 ## Specifying a mecabrc
 
-If you specify a dictionary path, you also must have a `mecabrc` file, even if
-it's empty. You can specify a `mecabrc` with `-r`. This may be necessary on
+If you get this error:
+
+    error message: [ifs] no such file or directory: /usr/local/etc/mecabrc
+
+You need to specify a `mecabrc` file. It's OK to specify an empty file, it just
+has to exist. You can specify a `mecabrc` with `-r`. This may be necessary on
 Debian or Ubuntu, where the `mecabrc` is in `/etc/mecabrc`.
+
+You can specify an empty `mecabrc` like this:
+
+    tagger = MeCab.Tagger('-r/dev/null -d/home/hoge/mydic')
 
 ## Using Unsupported Output Modes like `-Ochasen`
 
 Chasen output is not a built-in feature of MeCab, you must specify it in your
 `dicrc` or `mecabrc`. Notably, Unidic does not include Chasen output format.
 Please see [the MeCab documentation](https://taku910.github.io/mecab/#format).
-
 
 # Alternatives
 
