@@ -115,4 +115,4 @@ Taku Kudo <taku@chasen.org> and Nippon Telegraph and Telephone Corporation,
 and is distributed under a 3-clause BSD license (see the file `BSD`).
 Alternatively, it may be redistributed under the terms of the
 GNU General Public License, version 2 (see the file `GPL`) or the
-GNU Lesser General Public License, version 2.1 (see the file `LGPL`).
+GNU Lesser General Public License, version 2.1 (see the file `LGPL`). 
