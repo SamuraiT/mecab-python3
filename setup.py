@@ -217,7 +217,7 @@ setup(name = "mecab-python3",
           'console_scripts': [
               'mecab-py = MeCab.cli:parse',
               'mecab-py-info = MeCab.cli:info',
-              ]},
+          ]},
       setup_requires = ["setuptools_scm"],
       extras_require = {
           'unidic': ['unidic'],
