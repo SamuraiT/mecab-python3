@@ -19,8 +19,7 @@ def tox_ubuntu_install_buildreqs(MECAB):
     run("sudo", "apt-get", "-y", "update")
 
     packages = [
-        "python2.7-dev", "python3.5-dev", "python3.6-dev",
-        "python3.7-dev", "tox"
+        "python2.7-dev", "python3.6-dev", "python3.7-dev", "tox"
     ]
     if MECAB == "system":
         packages.append("libmecab-dev")
@@ -43,8 +42,8 @@ def tox_build(MECAB, TRAVIS_OS):
 
     tox_ubuntu_install_buildreqs(MECAB)
 
-    for snake in ("python2.7", "python3.5", "python3.6", "python3.7"):
-        run(snake, "--version")
+    for snake in ("2.7", "3.6", "3.7", "3.8", "3.9"):
+        run("python" + snake, "--version")
 
     if MECAB == "system":
         run("mecab-config", "--version")
