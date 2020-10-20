@@ -107,7 +107,6 @@ def cibuildwheel_build(MECAB, TRAVIS_OS):
 
     S = setenv
     S("CIBW_ENVIRONMENT", "MECAB_DICDIR=build/dic BUNDLE_LIBMECAB=true")
-    S("CIBW_BEFORE_BUILD", "{project}/scripts/cibw-prepare-"+TRAVIS_OS+".py")
     S("CIBW_TEST_COMMAND", "pytest {project}/test/")
     S("CIBW_TEST_REQUIRES", TEST_REQUIRES)
     S("CIBW_BUILD_VERBOSITY", "3")
