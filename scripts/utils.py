@@ -3,12 +3,10 @@
 # as well as newer versions; in particular, subprocess.run cannot
 # be used, and we need fallbacks for shlex.quote and os.cpu_count.
 
-import hashlib
 import locale
 import os
 import subprocess
 import sys
-import tempfile
 
 __all__ = [
     "get_parallel_jobs",
