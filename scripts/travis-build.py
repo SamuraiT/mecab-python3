@@ -4,7 +4,6 @@ import os
 import sys
 
 from utils import activate_venv, mkdir_p, setenv, run, run_output
-from build_requirements import SWIG
 
 #
 # Driver: tox

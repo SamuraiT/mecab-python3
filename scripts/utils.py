@@ -13,8 +13,7 @@ import tempfile
 __all__ = [
     "get_parallel_jobs",
     "sh_quote", "log_cmd", "run", "run_output",
-    "activate_venv", "chdir", "mkdir_p", "setenv", "symlink", "touch",
-    "Downloadable"
+    "activate_venv", "chdir", "mkdir_p", "setenv", "symlink", "touch"
 ]
 
 OUTPUT_ENCODING = locale.getpreferredencoding(True)
@@ -207,50 +206,3 @@ def touch(path):
         sys.stderr.write("* touch: {}: {}\n".format(
             sh_quote(path), e.strerror))
         sys.exit(1)
-
-#
-# Downloading tarballs
-#
-
-
-class Downloadable(object):
-    def __init__(self, name, url, hash, unpacked_name=None):
-        self.name = name
-        self.url  = url
-        self.hash = hash
-        self.unpacked_name = unpacked_name
-
-    def retrieve(self, destdir="."):
-        fd = None
-        tfname = None
-        try:
-            (fd, tfname) = tempfile.mkstemp(prefix=self.name + ".",
-                                            dir=destdir)
-            run("curl", "-L", "-o", tfname, self.url)
-
-            h = hashlib.sha256()
-            while True:
-                blk = os.read(fd, 8192)
-                if not blk:
-                    break
-                h.update(blk)
-
-            digest = h.hexdigest()
-            if digest != self.hash:
-                sys.stderr.write("* SHA256 mismatch for {}:\n"
-                                 "*  expected {}\n"
-                                 "*       got {}\n"
-                                 .format(self.url, self.hash, digest))
-                sys.exit(1)
-
-            os.close(fd)
-            fd = None
-            os.rename(tfname, os.path.join(destdir, self.name))
-            return
-
-        except:  # noqa: E722: bare except used intentionally, with reraise
-            if fd is not None:
-                os.close(fd)
-            if tfname is not None:
-                os.unlink(tfname)
-            raise
