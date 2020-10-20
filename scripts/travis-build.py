@@ -35,7 +35,7 @@ def tox_build(MECAB, TRAVIS_OS):
         sys.exit(1)
 
     DISTRO = run_output("lsb_release", "-s", "-c")
-    if DISTRO != "xenial":
+    if DISTRO not in ("xenial", "bionic"):
         sys.stderr.write("Unrecognized Linux distribution: {}\n"
                          .format(DISTRO))
         sys.exit(1)
@@ -73,7 +73,7 @@ def cibuildwheel_build(MECAB, TRAVIS_OS):
 
     if TRAVIS_OS == "linux":
         DISTRO = run_output("lsb_release", "-s", "-c")
-        if DISTRO != "xenial":
+        if DISTRO not in ("xenial", "bionic"):
             sys.stderr.write("Unrecognized Linux distribution: {}\n"
                              .format(DISTRO))
             sys.exit(1)
