@@ -8,17 +8,17 @@ language: generic
 matrix:
   include:
   - os: linux
-    dist: xenial
+    dist: bionic
     env: DRIVER=tox MECAB=system
   - os: linux
-    dist: xenial
+    dist: bionic
     env: DRIVER=tox MECAB=bundled
   - os: linux
-    dist: xenial
+    dist: bionic
     services: docker
     env: DRIVER=cibuildwheel MECAB=bundled CIBW_MANYLINUX_X86_64_IMAGE=manylinux1 CIBW_MANYLINUX_I686_IMAGE=manylinux1 CIBW_SKIP="pp* cp35-*"
   - os: linux
-    dist: xenial
+    dist: bionic
     services: docker
     env: DRIVER=cibuildwheel MECAB=bundled CIBW_MANYLINUX_X86_64_IMAGE=manylinux2010 CIBW_MANYLINUX_I686_IMAGE=manylinux2010 CIBW_SKIP="pp* cp35-*"
   - os: osx
