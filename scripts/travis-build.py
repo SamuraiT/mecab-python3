@@ -8,9 +8,6 @@ from build_requirements import SWIG
 
 #
 # Driver: tox
-# currently only supports Ubuntu 16.04LTS (xenial), which is the
-# most up-to-date Linux environment available via Travis, and
-# installing many Pythons into it is straightforward
 #
 
 
@@ -36,7 +33,7 @@ def tox_build(MECAB, TRAVIS_OS):
         sys.exit(1)
 
     DISTRO = run_output("lsb_release", "-s", "-c")
-    if DISTRO not in ("xenial", "bionic"):
+    if DISTRO not in ("bionic"):
         sys.stderr.write("Unrecognized Linux distribution: {}\n"
                          .format(DISTRO))
         sys.exit(1)
@@ -74,7 +71,7 @@ def cibuildwheel_build(MECAB, TRAVIS_OS):
 
     if TRAVIS_OS == "linux":
         DISTRO = run_output("lsb_release", "-s", "-c")
-        if DISTRO not in ("xenial", "bionic"):
+        if DISTRO not in ("bionic"):
             sys.stderr.write("Unrecognized Linux distribution: {}\n"
                              .format(DISTRO))
             sys.exit(1)
