@@ -62,10 +62,6 @@ def cibuildwheel_ubuntu_install_buildreqs():
     run("sudo", "apt-get", "-y", "install", "virtualenv")
 
 
-def cibuildwheel_ubuntu_prep_swig():
-    SWIG.retrieve("build")
-
-
 def cibuildwheel_ubuntu_prep_dictionary():
     try:
         with open("/etc/mecabrc", "rt") as fp:
@@ -108,7 +104,6 @@ def cibuildwheel_build(MECAB, TRAVIS_OS):
 
         mkdir_p("build")
         cibuildwheel_ubuntu_install_buildreqs()
-        cibuildwheel_ubuntu_prep_swig()
 
     elif TRAVIS_OS == "osx":
         mkdir_p("build")
