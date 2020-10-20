@@ -20,7 +20,7 @@ def tox_ubuntu_install_buildreqs(MECAB):
 
     packages = [
         "python2.7-dev", "python3.5-dev", "python3.6-dev",
-        "python3.7-dev", "tox", "swig"
+        "python3.7-dev", "tox"
     ]
     if MECAB == "system":
         packages.append("libmecab-dev")
