@@ -61,29 +61,6 @@ def cibuildwheel_ubuntu_install_buildreqs():
     run("sudo", "apt-get", "-y", "install", "virtualenv")
 
 
-def cibuildwheel_ubuntu_prep_dictionary():
-    try:
-        with open("/etc/mecabrc", "rt") as fp:
-            for line in fp:
-                if line.startswith("dicdir"):
-                    _, _, dicdir = line.partition("=")
-                    dicdir = dicdir.strip()
-                    break
-            else:
-                raise ValueError("no 'dicdir' line found")
-
-    except (OSError, IOError) as e:
-        sys.stderr.write("* /etc/mecabrc: {}\n", e.strerror())
-        sys.exit(1)
-
-    except Exception as e:
-        sys.stderr.write("* /etc/mecabrc: {}\n", str(e))
-        sys.exit(1)
-
-    # dicdir may be a symlink, force resolution
-    run("cp", "-a", dicdir+"/.", "build/dic")
-
-
 def cibuildwheel_osx_install_buildreqs():
     run("pip3", "install", "virtualenv")
 
