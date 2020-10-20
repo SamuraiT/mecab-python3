@@ -14,7 +14,7 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        python-version: [3.5, 3.6, 3.7, 3.8]
+        python-version: [3.5, 3.6, 3.7, 3.8, 3.9]
         include:
           - python-version: 3.5
             py-short: 35
@@ -28,10 +28,13 @@ jobs:
           - python-version: 3.8
             py-short: 38
             py-short2: 38
+          - python-version: 3.9
+            py-short: 39
+            py-short2: 39
     steps:
     - uses: actions/checkout@v1
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
     - name: Cache mecab
