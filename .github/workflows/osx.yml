@@ -52,7 +52,7 @@ jobs:
         # Fix the wheel #18
         pip install delocate
         VERSION=$(python setup.py --version)
-        path_to_wheel=$(find -f dist/mecab-python3-${VERSION}-cp${{ matrix.py-short }}-cp${{ matrix.py-short2 }}-macosx*.whl)
+        path_to_wheel=$(find -f dist/mecab_python3-${VERSION}-cp${{ matrix.py-short }}-cp${{ matrix.py-short2 }}-macosx*.whl)
         # Unzip the wheel and copy the dylib
         mkdir tmp; cd tmp
         unzip ../$path_to_wheel
