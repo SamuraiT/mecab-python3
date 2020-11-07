@@ -15,4 +15,4 @@ jobs:
     - uses: actions/checkout@v1
     - run: docker build -t mecab-py .
     - name: setup and test
-      run: docker run -v $(pwd):/workdir -w /workdir mecab-py sh -c "$PYTHON -m pip install pytest wheel && $PYTHON -m pip install -e . && $PYTHON -m pytest"
+      run: docker run -v $(pwd):/workdir -w /workdir mecab-py sh -c "$PYTHON -m pip install pytest wheel ipadic && $PYTHON -m pip install -e . && $PYTHON -m pytest"
