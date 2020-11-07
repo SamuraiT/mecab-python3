@@ -1,0 +1,37 @@
+name: Build manylinux1 wheels
+
+on:
+  push:
+    branches: 
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+    - name: Build MeCab 
+      uses: ./.github/workflows/actions/build-manylinux/
+    - name: Upload Wheels
+      uses: actions/upload-artifact@v1
+      with: 
+        name: manylinux1-wheels
+        path: manylinux1-wheels
+    - name: Publish to PyPI if tagged
+      if: startsWith(github.ref, 'refs/tags')
+      env:
+        TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+      run: |
+        python --version
+        pip --version
+        python -m pip install --upgrade pip
+        pip install twine setuptools-scm
+        twine upload manylinux1-wheels/fugashi*whl
+        python setup.py sdist
+        twine upload dist/fugashi*.tar.gz
+
