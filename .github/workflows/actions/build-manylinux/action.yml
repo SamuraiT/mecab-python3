@@ -1,0 +1,6 @@
+name: build wheels with manylinux docker image
+runs:
+    using: 'docker'
+    image: docker://quay.io/pypa/manylinux1_x86_64
+    args:
+        - .github/workflows/entrypoint.sh
