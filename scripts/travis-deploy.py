@@ -34,7 +34,7 @@ def do_deployment(tag, os, build_sdist=False):
 
     # Twine will pick up the username, password, and repo URL from the
     # environment.
-    run("twine", "upload", "--verbose", "--disable-progress-bar", *wheels)
+    #run("twine", "upload", "--verbose", "--disable-progress-bar", *wheels)
 
 
 def main():
