@@ -80,5 +80,5 @@ jobs:
         TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
       run: |
         pip install twine
-        twine upload dist/mecab*
+        twine upload dist/mecab*whl
 
