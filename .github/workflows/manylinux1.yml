@@ -32,7 +32,7 @@ jobs:
         pip --version
         python -m pip install --upgrade pip
         pip install twine setuptools-scm
-        twine upload manylinux1-wheels/fugashi*whl
+        twine upload manylinux1-wheels/mecab*whl
         python setup.py sdist
-        twine upload dist/fugashi*.tar.gz
+        twine upload dist/mecab*.tar.gz
 
