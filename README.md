@@ -1,12 +1,14 @@
 [![Current PyPI packages](https://badge.fury.io/py/mecab-python3.svg)](https://pypi.org/project/mecab-python3/)
-[![Build status](https://travis-ci.org/SamuraiT/mecab-python3.svg?branch=master)](https://travis-ci.org/SamuraiT/mecab-python3)
+![Test Status](https://github.com/SamuraiT/mecab-python3/workflows/test-manylinux/badge.svg)
+
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/mecab-python3)](https://pypi.org/project/mecab-python3/)
 ![Supported Platforms](https://img.shields.io/badge/platforms-linux%20macosx%20windows-blue)
 
 # mecab-python3
 
 This is a Python wrapper for the [MeCab][] morphological analyzer for Japanese
-text. It works with Python 3.6 and greater, as well as Python 2.7.
+text. It works with Python 3.6 and greater; if you need to use Python 2.7, use
+v1.0.2.
 
 **issueを英語で書く必要はありません。**
 
