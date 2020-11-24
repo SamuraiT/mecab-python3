@@ -64,6 +64,20 @@ To build from source using pip,
 pip install --no-binary :all: mecab-python3
 ```
 
+## Dictionaries
+
+There are many different dictionaries available for MeCab. These UniDic packages, which include slight modifications for ease of use, are recommended:
+
+- [unidic](https://github.com/polm/unidic-py): The full UniDic 2.3.0.
+- [unidic-lite](https://github.com/polm/unidic-lite): The older, much smaller, but not much less useful 2.1.2.
+
+The dictionaries below are not recommended due to being unmaintained for many years, but they are available for use with legacy applications.
+
+- [ipadic](https://github.com/polm/ipadic-py)
+- [jumandic](https://github.com/polm/jumandic-py)
+
+For more details on the differences between dictionaries see [here](https://www.dampfkraft.com/nlp/japanese-tokenizer-dictionaries.html). 
+
 # Common Issues
 
 If you get a `RuntimeError` when you try to run MeCab, here are some things to check:
