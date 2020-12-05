@@ -14,11 +14,8 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        python-version: [3.5, 3.6, 3.7, 3.8, 3.9]
+        python-version: [3.6, 3.7, 3.8, 3.9]
         include:
-          - python-version: 3.5
-            py-short: 35
-            py-short2: 35m
           - python-version: 3.6
             py-short: 36
             py-short2: 36m
