@@ -7,7 +7,10 @@
 
 This is a Python wrapper for the [MeCab][] morphological analyzer for Japanese
 text. It works with Python 3.6 and greater; if you need to use Python 2.7, use
-v1.0.2.
+v1.0.2. 
+
+**Note:** If using MacOS Big Sur, you'll need to upgrade pip to version 20.3 or
+higher to use wheels due to a pip issue.
 
 **issueを英語で書く必要はありません。**
 
