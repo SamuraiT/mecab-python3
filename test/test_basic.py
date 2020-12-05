@@ -40,15 +40,8 @@ except ImportError:
     pass
 
 
-# unittest.TestCase.subTest is only available in python >=3.5, not 2.x
-# provide a shim
-if hasattr(unittest.TestCase, 'subTest'):
-    def sub_test(testcase, *args, **kwargs):
-        return testcase.subTest(*args, **kwargs)
-else:
-    @contextlib.contextmanager
-    def sub_test(testcase, *args, **kwargs):
-        yield
+def sub_test(testcase, *args, **kwargs):
+    return testcase.subTest(*args, **kwargs)
 
 
 class TestTagger(unittest.TestCase):
@@ -122,7 +115,8 @@ class TestTagger(unittest.TestCase):
     def test_tokenization(self):
         for sentence, answer in SENTENCES:
             tokens = [tok[0] for tok in self.tokenize(sentence)]
-            with sub_test(self, sentence=sentence):
+            
+            with self.subTest(sentence=sentence):
                 self.assertEqual(tokens, answer)
 
     def validateNodes(self, sentence, nodes):
@@ -133,26 +127,10 @@ class TestTagger(unittest.TestCase):
             sentence = sentence[n:]
         self.assertEqual(sentence, u"")
 
-    # TODO: "Lattice" mode output is much more complicated and I don't
-    # understand it well enough to write tests for it.  For now, just
-    # make sure that parsing a lattice doesn't crash or throw an
-    # exception.
     def test_parseToLattice(self):
         lattice = MeCab.Lattice()
         lattice.set_sentence(SENTENCE)
         self.tagger.parse(lattice)
-
-        # len = lattice.size()
-        # for i in range(len + 1):
-        #     b = lattice.begin_nodes(i)
-        #     e = lattice.end_nodes(i)
-        #     while b:
-        #         print("B[%d] %s\t%s" % (i, b.surface, b.feature))
-        #         b = b.bnext
-        #     while e:
-        #         print("E[%d] %s\t%s" % (i, e.surface, e.feature))
-        #         e = e.bnext
-        # print("EOS");
 
 
 if __name__ == "__main__":
