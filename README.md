@@ -119,7 +119,7 @@ Please see [the MeCab documentation](https://taku910.github.io/mecab/#format).
 
 # Alternatives
 
-- [fugashi](https://github.com/polm/fugashi) is a Cython wrapper for MeCab with a Pythonic interface, by the current maintainer of this libray
+- [fugashi](https://github.com/polm/fugashi) is a Cython wrapper for MeCab with a Pythonic interface, by the current maintainer of this library
 - [SudachiPy](https://github.com/WorksApplications/SudachiPy) is a modern tokenizer with a maintained dictionary, though it's slower than MeCab
 - [KoNLPy](https://konlpy.org/en/latest/) is a library for Korean NLP that includes a MeCab wrapper
 
