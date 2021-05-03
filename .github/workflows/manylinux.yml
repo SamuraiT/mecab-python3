@@ -1,4 +1,4 @@
-name: Build manylinux1 wheels
+name: Build manylinux wheels
 
 on:
   push:
@@ -9,19 +9,31 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        arch: [x86_64, aarch64]
+    env:
+      arch: ${{ matrix.arch }}
     steps:
     - uses: actions/checkout@v1
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
         python-version: '3.x'
-    - name: Build MeCab 
+    - name: Set up QEMU
+      if: ${{ matrix.arch == 'aarch64' }}
+      uses: docker/setup-qemu-action@v1
+    - name: Build x86_64 MeCab
+      if: ${{ matrix.arch == 'x86_64' }}
       uses: ./.github/workflows/actions/build-manylinux/
+    - name: Build aarch64 MeCab
+      if: ${{ matrix.arch == 'aarch64' }}
+      uses: ./.github/workflows/actions_aarch64/build_manylinux2014/
     - name: Upload Wheels
       uses: actions/upload-artifact@v1
       with: 
-        name: manylinux1-wheels
-        path: manylinux1-wheels
+        name: manylinux-wheels
+        path: manylinux-wheels
     - name: Publish to PyPI if tagged
       if: startsWith(github.ref, 'refs/tags')
       env:
@@ -32,7 +44,9 @@ jobs:
         pip --version
         python -m pip install --upgrade pip
         pip install twine setuptools-scm
-        twine upload manylinux1-wheels/mecab*whl
-        python setup.py sdist
-        twine upload dist/mecab*.tar.gz
+        twine upload manylinux-wheels/mecab*whl
+        if [ $arch == 'x86_64' ]; then
+          python setup.py sdist
+          twine upload dist/mecab*.tar.gz
+        fi
 
