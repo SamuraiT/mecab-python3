@@ -1,0 +1,7 @@
+name: build wheels with manylinux docker image for aarch64
+    
+runs:
+    using: 'docker'
+    image: docker://quay.io/pypa/manylinux2014_aarch64
+    args:
+        - .github/workflows/entrypoint.sh
