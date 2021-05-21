@@ -103,7 +103,7 @@ def error_info(args):
 
 
 class Tagger(_MeCab.Tagger):
-    def __init__(self, rawargs=""):
+    def __init__(self, rawargs="", error_check=False):
         # First check for Unidic.
         unidicdir = try_import_unidic()
         args = rawargs
@@ -123,7 +123,8 @@ class Tagger(_MeCab.Tagger):
         try:
             super(Tagger, self).__init__(args)
         except RuntimeError:
-            error_info(rawargs)
+            if not error_check:
+                error_info(rawargs)
             raise
 
 
