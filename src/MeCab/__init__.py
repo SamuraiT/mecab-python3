@@ -63,6 +63,8 @@ def try_import_unidic():
 
 
 FAILMESSAGE = """
+----------------------------------------------------------
+
 Failed initializing MeCab. Please see the README for possible solutions:
 
     https://github.com/SamuraiT/mecab-python3#common-issues
@@ -93,14 +95,14 @@ def get_error_details(args):
 
 
 def error_info(args):
-    """Print guide to solving initialization errors."""
-    print(FAILMESSAGE, file=sys.stderr)
-    print('arguments:', args, file=sys.stderr)
+    """Render guide to solving initialization errors."""
+    msg = FAILMESSAGE + "\n"
+    msg += "arguments: " + str(args) + "\n"
 
     message = get_error_details(args)
-    print('error message:', message, file=sys.stderr)
-    print('----------------------------------------------------------')
-
+    msg += message + "\n"
+    msg += '----------------------------------------------------------\n'
+    return msg
 
 class Tagger(_MeCab.Tagger):
     def __init__(self, rawargs=""):
@@ -122,9 +124,8 @@ class Tagger(_MeCab.Tagger):
 
         try:
             super(Tagger, self).__init__(args)
-        except RuntimeError:
-            error_info(rawargs)
-            raise
+        except RuntimeError as ee:
+            raise RuntimeError(error_info(rawargs)) from ee
 
 
 class Model(_MeCab.Model):
@@ -140,10 +141,11 @@ class Model(_MeCab.Model):
 
         try:
             super(Model, self).__init__(args)
-        except RuntimeError:
+        except RuntimeError as ee:
             if not error_check:
-                error_info(rawargs)
-            raise
+                raise RuntimeError(error_info(rawargs)) from ee
+            else:
+                raise
 
 
 __all__.append("Model")
