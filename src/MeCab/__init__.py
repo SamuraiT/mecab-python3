@@ -40,6 +40,13 @@ del _reexport_filtered
 #
 # Version information
 #
+# Note that this is the version of MeCab, not of mecab-python3. Since MeCab
+# hasn't been updated since roughly 2013 this has been 0.996 for years and is
+# unlikely to ever change.
+#
+# This is preserved to avoid breaking API compatibility, but should be removed
+# in v2, should that ever happen.
+#
 
 VERSION = _MeCab.Tagger_version()
 __all__.append("VERSION")
