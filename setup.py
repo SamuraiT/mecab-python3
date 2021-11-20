@@ -158,7 +158,7 @@ class build_py(_build_py):
         self.analyze_manifest()
         data_files = []
         for pkg in (self.packages or ()):
-            data_files.extend(self._get_pkg_data_files(pkg))
+            data_files.append(self._get_pkg_data_files(pkg))
         return data_files
 
     def _get_pkg_data_files(self, package):
@@ -166,10 +166,10 @@ class build_py(_build_py):
         if package == "MeCab" and USE_BUNDLED_LIBMECAB:
             d_package, d_srcdir, d_builddir, d_filenames = data
             assert d_package == package
-            yield d_package, d_srcdir, d_builddir, d_filenames
+            return d_package, d_srcdir, d_builddir, d_filenames
 
         else:
-            yield data
+            return data
 
 
 # Windows requires special prep
