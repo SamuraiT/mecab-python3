@@ -1,7 +1,7 @@
 #!/bin/bash
 # Install mecab, then build wheels
 set -e
-manylinux_version=1
+manylinux_version=2014
 plat=x86_64
 
 # install MeCab
