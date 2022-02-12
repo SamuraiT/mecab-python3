@@ -53,9 +53,9 @@ installed by default when you use `pip`:
 pip install mecab-python3
 ```
 
-These wheels include an internal (statically linked) copy of the MeCab library,
-but not dictionary. In order to use MeCab you'll need to install a dictionary.
-`unidic-lite` is a good one to start with:
+These wheels include a copy of the MeCab library, but not a dictionary. In
+order to use MeCab you'll need to install a dictionary. `unidic-lite` is a good
+one to start with:
 
 ```sh
 pip install unidic-lite
@@ -69,10 +69,10 @@ pip install --no-binary :all: mecab-python3
 
 ## Dictionaries
 
-There are many different dictionaries available for MeCab. These UniDic packages, which include slight modifications for ease of use, are recommended:
+In order to use MeCab, you must install a dictionary. There are many different dictionaries available for MeCab. These UniDic packages, which include slight modifications for ease of use, are recommended:
 
-- [unidic](https://github.com/polm/unidic-py): The full UniDic 2.3.0.
-- [unidic-lite](https://github.com/polm/unidic-lite): The older, much smaller, but not much less useful 2.1.2.
+- [unidic](https://github.com/polm/unidic-py): The latest full UniDic.
+- [unidic-lite](https://github.com/polm/unidic-lite): A slightly modified UniDic 2.1.2, chosen for its small size.
 
 The dictionaries below are not recommended due to being unmaintained for many years, but they are available for use with legacy applications.
 
