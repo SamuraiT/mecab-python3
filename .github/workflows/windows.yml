@@ -1,12 +1,6 @@
 name: Build Python Windows wheels
 
-on:
-  push:
-    branches:
-      - master
-      - windows-action
-  create:
-
+on: [push]
 
 jobs:
   build:

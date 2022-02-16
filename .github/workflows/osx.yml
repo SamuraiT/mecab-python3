@@ -1,10 +1,6 @@
 name: Build OSX wheels
 
-on:
-  push:
-    branches:
-      - master
-  create:
+on: [push]
 
 jobs:
   build_osx:

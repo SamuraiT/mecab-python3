@@ -1,10 +1,6 @@
 name: Build manylinux wheels
 
-on:
-  push:
-    branches: 
-      - master
-  create:
+on: [push]
 
 jobs:
   deploy:
