@@ -3,7 +3,35 @@ name: Build manylinux wheels
 on: [push]
 
 jobs:
-  deploy:
+  build_sdist:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+    - name: install MeCab
+      run: |
+        git clone --depth=1 https://github.com/taku910/mecab.git
+        cd mecab/mecab
+        ./configure --enable-utf8-only
+        make
+        sudo make install
+        cd ../..
+    - name: build sdist
+      run: |
+        python -m pip install --upgrade pip
+        pip install twine setuptools-scm
+        python setup.py sdist
+    - name: upload to pypi if tagged
+      if: startsWith(github.ref, 'refs/tags')
+      env:
+        TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+      run: |
+        twine upload dist/mecab*.tar.gz
+  build_manylinux:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -41,8 +69,4 @@ jobs:
         python -m pip install --upgrade pip
         pip install twine setuptools-scm
         twine upload manylinux-wheels/mecab*whl
-        if [ $arch == 'x86_64' ]; then
-          python setup.py sdist
-          twine upload dist/mecab*.tar.gz
-        fi
 
