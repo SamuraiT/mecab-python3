@@ -6,7 +6,7 @@ plat=x86_64
 
 # install MeCab
 # TODO specify the commit used here
-git clone --depth=1 git://github.com/taku910/mecab.git
+git clone --depth=1 https://github.com/taku910/mecab.git
 cd mecab/mecab
 if [ `uname -m` == 'aarch64' ]; then
   manylinux_version=2014
