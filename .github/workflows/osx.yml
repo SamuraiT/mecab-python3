@@ -8,7 +8,7 @@ jobs:
     strategy:
       max-parallel: 5
       matrix:
-        python-version: [3.6, 3.7, 3.8, 3.9, "3.10"]
+        python-version: [3.6, 3.7, 3.8, 3.9, "3.10", "3.11"]
         include:
           - python-version: 3.6
             py-short: 36
@@ -25,6 +25,9 @@ jobs:
           - python-version: "3.10"
             py-short: 310
             py-short2: 310
+          - python-version: "3.11"
+            py-short: 311
+            py-short2: 311
 
     steps:
     - uses: actions/checkout@v1
