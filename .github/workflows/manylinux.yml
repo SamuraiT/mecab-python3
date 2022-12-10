@@ -6,12 +6,19 @@ jobs:
   build_sdist:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v3
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: '3.x'
+    - name: Cache mecab
+      id: cache-mecab
+      uses: actions/cache@v3
+      with:
+        path: mecab
+        key: mecab-build
     - name: install MeCab
+      if: steps.cache-mecab.outputs.cache-hit != 'true'
       run: |
         git clone --depth=1 https://github.com/taku910/mecab.git
         cd mecab/mecab
@@ -39,20 +46,38 @@ jobs:
     env:
       arch: ${{ matrix.arch }}
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v3
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: '3.x'
-    - name: Set up QEMU
-      if: ${{ matrix.arch == 'aarch64' }}
-      uses: docker/setup-qemu-action@v1
+
+    - name: Cache mecab
+      id: cache-mecab
+      uses: actions/cache@v3
+      with:
+        path: ${{ github.workspace }}/mecab_${{ matrix.arch }}
+        key: mecab-build-${{ matrix.arch }}
+
+    # The verbosity and indirection here seems to be a required side effect of
+    # using Docker.
     - name: Build x86_64 MeCab
-      if: ${{ matrix.arch == 'x86_64' }}
+      if: matrix.arch == 'x86_64' && steps.cache-mecab.outputs.cache-hit != 'true'
       uses: ./.github/workflows/actions/build-manylinux/
+    - name: Build x86_64 wheels
+      if: matrix.arch == 'x86_64'
+      uses: ./.github/workflows/actions/build-wheels/
+
+    - name: Set up QEMU
+      if: matrix.arch == 'aarch64'
+      uses: docker/setup-qemu-action@v1
     - name: Build aarch64 MeCab
-      if: ${{ matrix.arch == 'aarch64' }}
+      if: matrix.arch == 'aarch64' && steps.cache-mecab.outputs.cache-hit != 'true'
       uses: ./.github/workflows/actions_aarch64/build_manylinux2014/
+    - name: Build aarch64 wheels
+      if: matrix.arch == 'aarch64'
+      uses: ./.github/workflows/actions_aarch64/build_wheels/
+
     - name: Upload Wheels
       uses: actions/upload-artifact@v1
       with: 

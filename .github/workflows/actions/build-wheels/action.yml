@@ -1,6 +1,6 @@
-name: build mecab with manylinux docker image
+name: build wheels with manylinux docker image
 runs:
     using: 'docker'
     image: docker://quay.io/pypa/manylinux2014_x86_64
     args:
-        - .github/workflows/build_mecab.sh
+        - .github/workflows/entrypoint.sh

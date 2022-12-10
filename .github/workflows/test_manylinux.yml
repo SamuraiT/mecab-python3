@@ -12,7 +12,7 @@ jobs:
     env:
       PYTHON: python${{ matrix.python-version }}
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v3
     - run: docker build -t mecab-py .
     - name: setup and test
       run: docker run -v $(pwd):/workdir -w /workdir mecab-py sh -c "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/ && $PYTHON -m pip install pytest wheel unidic-lite && $PYTHON -m pip install -e . && $PYTHON -m pytest"

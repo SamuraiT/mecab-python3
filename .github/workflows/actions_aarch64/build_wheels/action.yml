@@ -4,4 +4,4 @@ runs:
     using: 'docker'
     image: docker://quay.io/pypa/manylinux2014_aarch64
     args:
-        - .github/workflows/build_mecab.sh
+        - .github/workflows/entrypoint.sh
