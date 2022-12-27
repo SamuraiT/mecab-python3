@@ -1,3 +1,5 @@
+REMOVE ME
+
 [![Current PyPI packages](https://badge.fury.io/py/mecab-python3.svg)](https://pypi.org/project/mecab-python3/)
 ![Test Status](https://github.com/SamuraiT/mecab-python3/workflows/test-manylinux/badge.svg)
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/mecab-python3)](https://pypi.org/project/mecab-python3/)
