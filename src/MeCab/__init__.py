@@ -105,6 +105,10 @@ def error_info(args):
     """Render guide to solving initialization errors."""
     msg = FAILMESSAGE + "\n"
     msg += "arguments: " + str(args) + "\n"
+    # Check if a dictionary is found
+
+    dict_path = try_import_unidic()
+    msg += f"default dictionary path: {dict_path}\n"
 
     message = get_error_details(args)
     msg += message + "\n"
