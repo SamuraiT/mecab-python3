@@ -5,14 +5,13 @@ on: [push]
 jobs:
   build_osx:
     runs-on: macos-latest
+    permissions:
+      id-token: write
     strategy:
       max-parallel: 5
       matrix:
-        python-version: [3.6, 3.7, 3.8, 3.9, "3.10", "3.11"]
+        python-version: [3.7, 3.8, 3.9, "3.10", "3.11", "3.12"]
         include:
-          - python-version: 3.6
-            py-short: 36
-            py-short2: 36m
           - python-version: 3.7
             py-short: 37
             py-short2: 37m
@@ -28,6 +27,9 @@ jobs:
           - python-version: "3.11"
             py-short: 311
             py-short2: 311
+          - python-version: "3.12"
+            py-short: 312
+            py-short2: 312
 
     steps:
     - uses: actions/checkout@v3
