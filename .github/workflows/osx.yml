@@ -39,29 +39,7 @@ jobs:
     - name: Download and build MeCab
       shell: bash
       run: |
-        git clone --depth=1 https://github.com/taku910/mecab.git
-        cd mecab/mecab
-        ./configure --enable-utf8-only
-        make
-        sudo make install
-        cd ../..
-
-        python -m pip install --upgrade setuptools wheel pip setuptools-scm
-        python setup.py bdist_wheel
-
-        # Fix the wheel #18
-        pip install delocate
-        VERSION=$(python setup.py --version)
-        path_to_wheel=$(find -f dist/mecab_python3-${VERSION}-cp${{ matrix.py-short }}-cp${{ matrix.py-short2 }}-macosx*.whl)
-        # Unzip the wheel and copy the dylib
-        mkdir tmp; cd tmp
-        unzip ../$path_to_wheel
-        delocate-path -L mecab-python3.dylibs .
-        # Zip the wheel
-        zip -r -D ../$path_to_wheel *
-        cd -; rm -rf tmp
-        # Check if libmecab.2.dylib is included
-        unzip -t $path_to_wheel
+        .github/macos-build.sh
     - name: Upload Wheels
       uses: actions/upload-artifact@v1
       with: 
