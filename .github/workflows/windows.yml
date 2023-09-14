@@ -8,11 +8,8 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        python-version: [3.6, 3.7, 3.8, 3.9, "3.10", "3.11"]
+        python-version: [3.7, 3.8, 3.9, "3.10", "3.11"]
         include:
-          - python-version: 3.6
-            py-short: 36
-            py-short2: 36m
           - python-version: 3.7
             py-short: 37
             py-short2: 37m
