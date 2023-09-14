@@ -5,13 +5,14 @@ on: [push]
 jobs:
   build:
     runs-on: windows-latest
-    permissions:
-      id-token: write
     strategy:
       max-parallel: 4
       matrix:
-        python-version: [3.7, 3.8, 3.9, "3.10", "3.11", "3.12"]
+        python-version: [3.6, 3.7, 3.8, 3.9, "3.10", "3.11"]
         include:
+          - python-version: 3.6
+            py-short: 36
+            py-short2: 36m
           - python-version: 3.7
             py-short: 37
             py-short2: 37m
@@ -27,9 +28,6 @@ jobs:
           - python-version: "3.11"
             py-short: 311
             py-short2: 311
-          - python-version: "3.12"
-            py-short: 312
-            py-short2: 312
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
@@ -68,4 +66,14 @@ jobs:
         pip install "dist/mecab_python3-${VERSION}-cp${{ matrix.py-short }}-cp${{ matrix.py-short2 }}-win_amd64.whl"
     - name: Publish to PyPI if tagged
       if: startsWith(github.ref, 'refs/tags')
-      uses:  pypa/gh-action-pypi-publish@release/v1
+      env:
+        TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+      run: |
+        python --version
+        pip --version
+        python -m pip install --upgrade pip
+        pip install twine setuptools-scm
+        twine upload dist/mecab*whl
+
+

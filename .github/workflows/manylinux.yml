@@ -5,8 +5,6 @@ on: [push]
 jobs:
   build_sdist:
     runs-on: ubuntu-latest
-    permissions:
-      id-token: write
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python
@@ -35,11 +33,13 @@ jobs:
         python setup.py sdist
     - name: upload to pypi if tagged
       if: startsWith(github.ref, 'refs/tags')
-      uses:  pypa/gh-action-pypi-publish@release/v1
+      env:
+        TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+      run: |
+        twine upload dist/mecab*.tar.gz
   build_manylinux:
     runs-on: ubuntu-latest
-    permissions:
-      id-token: write
     strategy:
       matrix:
         arch: [x86_64, aarch64]
@@ -85,5 +85,13 @@ jobs:
         path: manylinux-wheels
     - name: Publish to PyPI if tagged
       if: startsWith(github.ref, 'refs/tags')
-      uses:  pypa/gh-action-pypi-publish@release/v1
+      env:
+        TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+      run: |
+        python --version
+        pip --version
+        python -m pip install --upgrade pip
+        pip install twine setuptools-scm
+        twine upload manylinux-wheels/mecab*whl
 
