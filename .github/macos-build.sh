@@ -52,6 +52,5 @@ cd ../..
 
 python -m pip install --upgrade setuptools wheel pip setuptools-scm
 python -m pip install cibuildwheel==2.14.1
-pip install -r requirements.txt
 
 python -m cibuildwheel --platform macos --archs x86_64,arm64,universal2 --output-dir dist
