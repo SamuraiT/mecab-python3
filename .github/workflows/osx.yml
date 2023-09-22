@@ -5,74 +5,21 @@ on: [push]
 jobs:
   build_osx:
     runs-on: macos-latest
-    strategy:
-      max-parallel: 5
-      matrix:
-        python-version: [3.6, 3.7, 3.8, 3.9, "3.10", "3.11"]
-        include:
-          - python-version: 3.6
-            py-short: 36
-            py-short2: 36m
-          - python-version: 3.7
-            py-short: 37
-            py-short2: 37m
-          - python-version: 3.8
-            py-short: 38
-            py-short2: 38
-          - python-version: 3.9
-            py-short: 39
-            py-short2: 39
-          - python-version: "3.10"
-            py-short: 310
-            py-short2: 310
-          - python-version: "3.11"
-            py-short: 311
-            py-short2: 311
-
     steps:
     - uses: actions/checkout@v3
     - name: Set up python
       uses: actions/setup-python@v4
       with:
-        python-version: ${{ matrix.python-version }}
-        architecture: x64
+        python-version: '3.x'
     - name: Download and build MeCab
       shell: bash
       run: |
-        git clone --depth=1 https://github.com/taku910/mecab.git
-        cd mecab/mecab
-        ./configure --enable-utf8-only
-        make
-        sudo make install
-        cd ../..
-
-        python -m pip install --upgrade setuptools wheel pip setuptools-scm
-        python setup.py bdist_wheel
-
-        # Fix the wheel #18
-        pip install delocate
-        VERSION=$(python setup.py --version)
-        path_to_wheel=$(find -f dist/mecab_python3-${VERSION}-cp${{ matrix.py-short }}-cp${{ matrix.py-short2 }}-macosx*.whl)
-        # Unzip the wheel and copy the dylib
-        mkdir tmp; cd tmp
-        unzip ../$path_to_wheel
-        delocate-path -L mecab-python3.dylibs .
-        # Zip the wheel
-        zip -r -D ../$path_to_wheel *
-        cd -; rm -rf tmp
-        # Check if libmecab.2.dylib is included
-        unzip -t $path_to_wheel
+        .github/macos-build.sh
     - name: Upload Wheels
       uses: actions/upload-artifact@v1
       with: 
         name: osx-wheels
         path: dist
-    - name: Check wheels
-      shell: bash
-      run: |
-        ls -la dist
-        VERSION=$(python setup.py --version)
-        pip install dist/mecab_python3-${VERSION}-cp${{ matrix.py-short }}-cp${{ matrix.py-short2 }}-macosx*.whl
     - name: Publish to PyPI if tagged
       if: startsWith(github.ref, 'refs/tags') && github.repository_owner == 'polm'
       env:
