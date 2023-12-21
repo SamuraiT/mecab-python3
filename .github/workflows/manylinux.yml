@@ -10,7 +10,12 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '>=3.8 <3.13'
+        python-version: |
+          3.8
+          3.9
+          3.10
+          3.11
+          3.12
     - name: Cache mecab
       id: cache-mecab
       uses: actions/cache@v3
@@ -50,7 +55,12 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '>=3.8 <3.13'
+        python-version: |
+          3.8
+          3.9
+          3.10
+          3.11
+          3.12
 
     - name: Cache mecab
       id: cache-mecab
