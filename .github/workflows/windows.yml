@@ -53,7 +53,7 @@ jobs:
       run: |
         python setup.py bdist_wheel
     - name: Upload Wheel
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v4
       with:
         name: win-wheels
         path: dist
