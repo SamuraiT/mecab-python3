@@ -16,6 +16,7 @@ jobs:
           3.10
           3.11
           3.12
+          3.13
     - name: Cache mecab
       id: cache-mecab
       uses: actions/cache@v3
@@ -61,6 +62,7 @@ jobs:
           3.10
           3.11
           3.12
+          3.13
 
     - name: Cache mecab
       id: cache-mecab
@@ -89,9 +91,9 @@ jobs:
       uses: ./.github/workflows/actions_aarch64/build_wheels/
 
     - name: Upload Wheels
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v4
       with: 
-        name: manylinux-wheels
+        name: manylinux-wheels-${{ matrix.arch }}
         path: manylinux-wheels
     - name: Publish to PyPI if tagged
       if: startsWith(github.ref, 'refs/tags') && github.repository_owner == 'polm'

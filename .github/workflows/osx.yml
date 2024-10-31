@@ -16,12 +16,13 @@ jobs:
           3.10
           3.11
           3.12
+          3.13
     - name: Download and build MeCab
       shell: bash
       run: |
         .github/macos-build.sh
     - name: Upload Wheels
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v4
       with: 
         name: osx-wheels
         path: dist
