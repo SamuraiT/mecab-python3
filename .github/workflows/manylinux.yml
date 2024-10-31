@@ -93,7 +93,7 @@ jobs:
     - name: Upload Wheels
       uses: actions/upload-artifact@v4
       with: 
-        name: manylinux-wheels
+        name: manylinux-wheels-${{ matrix.arch }}
         path: manylinux-wheels
     - name: Publish to PyPI if tagged
       if: startsWith(github.ref, 'refs/tags') && github.repository_owner == 'polm'
