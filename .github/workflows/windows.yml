@@ -55,7 +55,7 @@ jobs:
     - name: Upload Wheel
       uses: actions/upload-artifact@v4
       with:
-        name: win-wheels
+        name: win-wheels-${{ matrix.python-version }}
         path: dist
     - name: Check wheels
       shell: bash
