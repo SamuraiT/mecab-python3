@@ -51,7 +51,7 @@ sudo make install
 cd ../..
 
 python -m pip install --upgrade setuptools wheel pip setuptools-scm
-python -m pip install cibuildwheel==2.21.3
+python -m pip install cibuildwheel==3.2.1
 
 # don't bother with pypy wheels
 export CIBW_SKIP="pp*"

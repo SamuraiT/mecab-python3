@@ -7,7 +7,7 @@ import sys
 from setuptools import setup, Extension
 from setuptools.command.build_ext import build_ext as _build_ext
 from setuptools.command.build_py import build_py as _build_py
-from distutils import log as setup_log
+
 
 SRCDIR = os.path.abspath(os.path.dirname(__file__))
 USE_BUNDLED_LIBMECAB = "BUNDLE_LIBMECAB" in os.environ
@@ -139,8 +139,7 @@ def discard_swig_wrappers(ext):
             except (OSError, IOError):
                 swig_py_wrapper = None
             if swig_py_wrapper is not None:
-                setup_log.info("discarding wrapper module {} for {}"
-                               .format(swig_py_wrapper, src))
+                print(f"discarding wrapper module {swig_py_wrapper} for {src}")
                 os.unlink(swig_py_wrapper)
 
 
@@ -232,6 +231,7 @@ setup(name = "mecab-python3",
           "Programming Language :: Python :: 3.11",
           "Programming Language :: Python :: 3.12",
           "Programming Language :: Python :: 3.13",
+          "Programming Language :: Python :: 3.14",
           "Intended Audience :: Developers",
           "Intended Audience :: Science/Research",
           "Natural Language :: Japanese",
